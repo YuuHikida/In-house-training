@@ -81,4 +81,7 @@ public class TeamService {
     public List<Team> selectTeamId(int employeeCode, int sorting, boolean isManager){
         return this.teamRepository.selectTeamId(employeeCode, sorting, isManager);
     }
+
+    //チームに人を追加する
+
 }

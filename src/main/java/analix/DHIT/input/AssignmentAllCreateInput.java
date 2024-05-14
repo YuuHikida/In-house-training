@@ -9,11 +9,11 @@ import java.util.List;
 @Data
 public class AssignmentAllCreateInput {
     private String memberList;
+    private String managerList;
 
     public String getMemberList() {
         return memberList;
     }
-
     public void setMemberList(String memberList) {
         this.memberList = memberList;
     }
@@ -21,10 +21,9 @@ public class AssignmentAllCreateInput {
     public String getManagerList() {
         return managerList;
     }
-
     public void setManagerList(String managerList) {
         this.managerList = managerList;
     }
 
-    private String managerList;
+
 }
