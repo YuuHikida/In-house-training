@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+    <script th:src="@{/js/handover.js}"></script>
+    <script th:inline="javascript">
+        const taskList = /*[[${taskList}]]*/;
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div th:if="${error}">
+        <div class="flash flash-danger alert alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="form-group mb-3 d-flex" style="justify-content: center;">
+
+            <div style="width: 200px;">
+                <p style="margin-bottom: auto;">引継ぎ元 チームメンバー</p>
+                <select class="form-select" id="beforeMember">
+                    <option th:each="member : ${taskList}" th:value="${member.employeeCode}"
+                            th:text="${member.name}"></option>
+                </select>
+                <p style="margin-bottom: auto;margin-top: 20px;">タスク</p>
+                <select class="form-select" id="memberTasks">
+                    <option th:each="task : ${taskList[0].tasks}" th:value="${task.taskId}"
+                            th:text="${task.taskName}"></option>
+                </select>
+            </div>
+
+            <div style="margin-left: 20px;margin-right: 10px;margin-top: auto;margin-bottom: auto;">
+                <img src="/img/右向き矢印.png" width="60" height="70" alt="右向き矢印">
+            </div>
+
+            <div style="margin-left: 10px;margin-right: 20px;width: 200px;">
+                <p style="margin-bottom: auto;">引継ぎ先 チームメンバー</p>
+                <select class="form-select" id="afterMember"></select>
+            </div>
+
+        </div>
+
+        <div style="text-align: center;margin-bottom: 30px;">
+            <button type="button" class="btn btn-primary" id="handoverCheck">確認</button>
+        </div>
+
+        <div class="form-group mb-3 d-flex" style="justify-content: center;">
+            <div id="tableContainerBefore" style="width: 300px;"></div>
+            <div id="tableContainerAfter" style="width: 300px;"></div>
+        </div>
+
+
+    </div>
+    <form th:action="@{/member/handover-add}" th:objct="${TaskHandoverSetInput}" method="post" id="handoverInput">
+        <input type="hidden" name="employeeCodeBefore">
+        <input type="hidden" name="employeeCodeAfter">
+        <input type="hidden" name="nameBefore">
+        <input type="hidden" name="nameAfter">
+        <input type="hidden" name="taskName">
+        <input type="hidden" name="taskId">
+        <input type="hidden" name="comment">
+        <input type="hidden" name="progressRate">
+
+        <div style="text-align: center;margin-bottom: 30px;">
+            <button type="submit" id="submitButton" class="btn btn-primary" style="display: none;">この変更で確定する</button>
+        </div>
+
+    </form>
+</div>
+
+<script th:src="@{/js/handover.js}"></script>
+
+</body>
+</html>
+

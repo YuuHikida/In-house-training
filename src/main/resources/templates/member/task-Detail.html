@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div th:if="${error}">
+        <div class="flash flash-danger alert alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+
+    <h2 class="text-center mb-4" th:text="${taskDetail.taskName + '　のタスク詳細'}"></h2>
+
+<!--    自分のタスクの場合「編集・削除」ボタンを表示する-->
+    <div th:if="${isOwner}" style="display: flex ; justify-content: center;">
+        <form th:action="@{'/member/taskEdit/' + ${taskDetail.taskId}}" method="get" class="text-center">
+            <button type="submit" class="btn btn-outline-success">編集</button>
+        </form>
+        <form th:action="@{'/member/taskDelete/' + ${taskDetail.taskId}}" method="get" class="text-center">
+            <button type="submit" class="btn btn-outline-danger" onClick="return check()">削除</button>
+        </form>
+    </div>
+<!--    自分のタスクの場合「編集・削除」ボタンを表示する-->
+
+    <div class="attendance-boxL">
+        <h5 class="text-center">コメント</h5>
+        <p style="font-size:20px;" th:text="${taskDetail.comment}">
+    </div>
+    <div class="attendance-boxR">
+        <h5 class="text-center">進捗率</h5>
+        <div class="progress" style="height: 50px; margin-top: 20px; background-color: #c3e6ed;">
+            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${taskDetail.progressRate} + '%;'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><p style="margin: auto; font-size: 20px;" th:text="${taskDetail.progressRate + '%'}"></p></div>
+        </div>
+    </div>
+    <div class="attendance-boxL">
+        <h5 class="text-center">作成日</h5>
+        <p style="font-size:20px;" id="taskDetail" th:text="${taskDetail.createAt}"></p>
+    </div>
+    <div class="attendance-boxR">
+        <h5 class="text-center">変更履歴</h5>
+        <table>
+            <thead>
+                <tr>
+                    <th>名前</th>
+                    <th>進捗</th>
+                    <th>コメント</th>
+                    <th>作成日</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task : ${taskHistory}">
+                    <td th:text="${task.name}"></td>
+                    <td th:text="${task.progressRate + '%'}"></td>
+                    <td th:text="${task.comment}"></td>
+                    <td th:text="${task.createAt}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+
+</div>
+<style layout:fragment="style">
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+</style>
+<script layout:fragment="script">
+    function check() {
+        if (window.confirm('この報告書を削除しますか？')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+</body>
+</html>
+<script>
+
+</script>

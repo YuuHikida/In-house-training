@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div th:if="${error}">
+        <div class="flash flash-danger alert alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">チーム選択</h2>
+        <form th:action="@{/member/handover}" method="post">
+            <label class="form-label">チーム名</label>
+            <select name="teamId" class="form-select">
+                <option th:each="team : ${teams}" th:value="${team.teamId}" th:text="${team.name}"></option>
+            </select>
+            <button type="submit" class="btn btn-success me-3">決定</button>
+        </form>
+
+    </div>
+</div>
+<style layout:fragment="style">
+    .text-kidoku {
+                    color: #02990E;
+                 }
+
+    .text-midoku {
+                    color: red;
+                 }
+    #tasklist_search {
+        flex-wrap: wrap;
+    }
+
+    .gap-2 {
+         justify-content: center;
+          width : 100%;
+    }
+    button.btn-lg {
+          float : left ;
+          text-align: center;
+          white-space: nowrap;
+          padding-left: 90px;
+          padding-right: 90px;
+    }
+    @media (max-width: 768px) {
+         h2.text-center.mb-4 {
+                    font-size: 1.3em;
+         }
+         .gap-2 {
+                    justify-content: center;
+                    width : 100%;
+         }
+          button.btn-lg {
+                    text-align: center;
+                    white-space: nowrap;
+                    padding-left: 40px;
+                    padding-right: 40px;
+          }
+          #tasklist_search  {
+                    flex-direction: column;
+                    align-content: center;
+          }
+
+          #tasklist_search > div {
+                    display: flex;
+                    align-items: center;
+          }
+
+          .form-label {
+                    white-space: nowrap;
+                    margin-right: 13px;
+           }
+     }
+</style>
+<script layout:fragment="script"></script>
+
+</body>
+</html>
+<script>
+    function goBack() {
+        // 前のページに戻る
+        window.history.back();
+    }
+
+
+    function check() {
+        if (window.confirm('このチームを削除しますか？')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+</script>

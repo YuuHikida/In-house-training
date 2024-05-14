@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+    <script th:src="@{/js/report.js}"></script>
+    <script th:inline="javascript">
+<!--        scriptに送りたいデータがあればここに 例：const taskList = /*[[${taskList}]]*/;-->
+    </script>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <h1 class="text-center mt-3">新規報告作成</h1>
+    <div class="container p-3">
+        <div class="card">
+            <div class="card-body">
+                <form class="row g-3 p-3" th:action="@{/member/report/create}" th:object="${ReportCreateInput}"
+                      method="post">
+                    <div th:if="${error != null}" class="text-center mb-4">
+                        <h3 style="color: red;" th:text="${error}"></h3>
+                    </div>
+                    <div class="d-flex">
+                        <div id="date_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2" style="width:200px;">
+                            <p class="text-center mt-3">日付</p>
+                            <div class="cs-form">
+                                <input type="date" class="form-control" name="date" th:value="${reportCreateInput.date}"
+                                       required
+                                       min="1900-01-01" max="2100-12-31"/>
+                            </div>
+                        </div>
+
+
+                        <div id="startTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2" style="width:200px;">
+                            <p class="text-center mt-3">出勤時間</p>
+                            <div class="cs-form">
+                                <input type="time" class="form-control" name="startTime"
+                                       th:value="${settingInput.startTime}" required/>
+                            </div>
+                        </div>
+                        <div id="endTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2" style="width:200px;">
+                            <p class="text-center mt-3">退勤時間</p>
+                            <div class="cs-form">
+                                <input type="time" class="form-control" name="endTime" th:value="${settingInput.endTime}"
+                                       required/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div th:if="${settingInput.employment == true}">
+                        <label class="text-nowrap" th:text="${reason}" style="color: red;"></label>
+                        <label for="text_latenessReason"></label>
+                        <input name="latenessReason" class="form-control" id="text_latenessReason" rows="3"
+                               maxlength="100"
+                               th:field="${reportCreateInput.latenessReason}" required>
+                        <span id="charCountLt" style="margin-left: 5px;"></span>
+                        <input type="hidden" th:field="${settingInput.employment}" th:value="true">
+                    </div>
+                    <div class="form-group">
+                        <p>本日の体調</p>
+                        <input type="radio" th:value="1" th:name="conditionRate" required checked><i
+                            class="bi bi-emoji-smile-fill text-success pe-3" style="font-size: 4rem;"></i><!--良好-->
+                        <input type="radio" th:value="2" th:name="conditionRate" required><i
+                            class="bi bi-emoji-neutral-fill text-warning pe-3" style="font-size: 4rem;"></i><!--普通-->
+                        <input type="radio" th:value="3" th:name="conditionRate" required><i
+                            class="bi bi-emoji-dizzy-fill text-danger" style="font-size: 4rem;"></i><!--悪い-->
+                    </div>
+                    <div>
+                        <label class="text-nowrap">体調コメント</label>
+                        <label for="text_condition"></label>
+                        <input name="condition" class="form-control" id="text_condition" rows="3" maxlength="50"
+                               th:value="${reportCreateInput.condition}" required>
+                        <span id="charCount" style="margin-left: 5px;"></span>
+                    </div>
+                    <div>
+                        <label class="text-nowrap">報告内容</label>
+                        <label for="text_impressions"></label><textarea name="impressions" class="form-control"
+                                                                        id="text_impressions"
+                                                                        rows="3" maxlength="300"
+                                                                        th:field="${reportCreateInput.impressions}"
+                                                                        required></textarea>
+                        <span id="charCount-im" style="margin-left: 5px;"></span>
+                    </div>
+                    <div>
+                        <label class="text-nowrap">明日の予定</label>
+                        <label for="text_tomorrowSchedule"></label><textarea class="form-control"
+                                                                             name="tomorrowSchedule"
+                                                                             id="text_tomorrowSchedule"
+                                                                             rows="3" maxlength="200"
+                                                                             th:field="${reportCreateInput.tomorrowSchedule}"
+                                                                             required></textarea>
+                        <span id="charCount-tom" style="margin-left: 5px;"></span>
+                    </div>
+                    <div class="col-12 d-flex flex-column gap-2" id="todo-field">
+                        <div class="d-flex gap-2">
+                            <p class="d-inline d-inline-block p-0 m-0">Todo（メモ帳)　改修中</p>
+                            <button type="button" class="btn btn-secondary" id="add-todo">追加</button>
+                        </div>
+                        <!-- タスクの入力フィールド -->
+                        <div id="taskListContainer">
+                            <div th:each="task, taskStatus : ${taskList}" class="card mb-3">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>タスク名</label>
+                                        <input type="text" class="form-control" placeholder="タスク名（最大100文字）" th:value="${task.taskName}" maxlength="100" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>進捗率</label>
+                                        <input type="number" class="form-control" placeholder="進捗率" th:value="${task.progressRate}" min="0" max="100" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>コメント</label>
+                                        <input type="text" class="form-control" placeholder="コメント（最大300文字）" th:value="${task.comment}" maxlength="300" required>
+                                    </div>
+                                    <button type="button" class="btn btn-danger" onclick="removeTask(this)">削除</button>
+                                </div>
+                            </div>
+                        </div>
+<!--                        まずは、追加ボタンの押下でタスク入力フィールドを拡張する-->
+<!--                        今のままだとタスク間の区切りが分かりずらいのでカード形式など分かりやすくしたい-->
+<!--                        内容の変更が有った時、分かるようにしたいなー-->
+<!--                        そして、user_taskとtask_log、場合によってはuser_task_reportのDB情報を編集・追加する処理を追加する-->
+<!--                        なので、年功の有無を判断するフラグが必要？-->
+<!--                        なお、新規追加の場合は判断は不要なので、、、、新規かどうかもフラグで？-->
+
+
+
+                        <div></div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="w-100 btn btn-lg btn-success">提出するよ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style layout:fragment="style">
+    .btn-danger {
+            /*width: 20%;*/
+            white-space: nowrap;
+            float: left;
+        }
+        @media (max-width: 768px) {
+            .overflow-x-hidden {
+                overflow-x: hidden !important;
+            }
+            .d-flex {
+                display: block !important;
+            }
+
+            #startTime_mb, #endTime_mb, #date_mb, #radio-check_mb {
+                display: flex !important;
+            }
+
+            .row .d-flex {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            #form-select_mb{
+                width : 100%;
+            }
+
+            .d-flex input[type="text"] {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            .d-flex input[type="number"] {
+                margin-bottom: 5px;
+                width : 50%;
+            }
+            .navbar {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 769px) {
+            #form-select_mb{
+                width : 300px;
+            }
+        }
+</style>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container mt-3">
+        <h1 class="text-center">タスク一覧</h1>
+        <p>削除したいタスクにチェックを入れて「確定」ボタンを押下してください。</p>
+        <div class="container-form">
+
+
+            <form id="deleteTaskForm" th:action="@{/member/taskBulkDeletionExecution}" th:object="${TaskBulkDeletionInput}" method="post" onsubmit="return setListValues()">
+                <div style="display: flex;justify-content: center;">
+                    <div style="width: 300px">
+                        <label>保持</label>
+                        <select id="taskList" class="form-select" multiple>
+                            <option th:each="task : ${taskList}" th:text="${task.taskName}"
+                                    th:value="${task.taskId}"></option>
+                        </select>
+                    </div>
+                    <div style="display:flex; flex-direction: column; justify-content: center;">
+                        <button type="button" onclick="removeTask()" class="btn btn-success">←戻す</button>
+                        <button type="button" onclick="addTask()" class="btn btn-danger">→削除</button>
+                    </div>
+                    <div style="width: 300px">
+                        <label>削除</label>
+                        <select id="deleteList" class="form-select" multiple>
+<!--                            <option></option>-->
+                        </select>
+                    </div>
+                </div>
+                <input id="taskInput" name="taskList" type="hidden">
+                <div style="display: flex; justify-content: center; margin-top: 10px;">
+                    <button type="submit" class="btn btn-lg btn-danger">削除実行</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script layout:fragment="script">
+    function setListValues() {
+    // deleteListの要素を取得
+    var deleteListElement = document.getElementById("deleteList");
+    var taskInputElement = document.getElementById("taskInput");
+
+    // deleteListに要素がない場合、エラーを表示してサブミットを中止
+    if (deleteListElement.options.length === 0) {
+        alert("削除するタスクを選択してください。");
+        return false;
+    }
+
+    // 確認ダイアログを表示し、ユーザーがキャンセルした場合はサブミットを中止
+    if (window.confirm('この報告書を削除しますか？')) {
+        // 全てのオプションの値をmanagerInputElementのvalueに設定
+        var selectedValues = Array.from(deleteListElement.options)
+                            .map(option => option.value);
+        // カンマで区切る
+        taskInputElement.value = selectedValues.join(",");
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+    function addTask() {
+    var taskSelect = document.getElementById("taskList");
+    var deleteList = document.getElementById("deleteList");
+
+    // 選択された項目をdeleteListに追加し、同時にtaskListから削除する
+    for (var i = taskSelect.options.length - 1; i >= 0; i--) {
+        var taskOption = taskSelect.options[i];
+
+        if (taskOption.selected) {
+            // deleteListに追加
+            var deleteAdd = document.createElement("option");
+            deleteAdd.text = taskOption.text;
+            deleteAdd.value = taskOption.value;
+            deleteList.add(deleteAdd);
+
+            // taskListから削除
+            taskSelect.remove(i);
+        }
+    }
+}
+
+function removeTask() {
+    var taskSelect = document.getElementById("taskList");
+    var deleteList = document.getElementById("deleteList");
+
+    // 選択された項目をdeleteListから削除し、taskListに移動する
+    for (var i = deleteList.options.length - 1; i >= 0; i--) {
+        var deleteOption = deleteList.options[i];
+
+        if (deleteOption.selected) {
+            // taskListに移動
+            var taskAdd = document.createElement("option");
+            taskAdd.text = deleteOption.text;
+            taskAdd.value = deleteOption.value;
+            taskSelect.add(taskAdd);
+
+            // deleteListから削除
+            deleteList.remove(i);
+        }
+    }
+}
+</script>
+</body>
+</html>

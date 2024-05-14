@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="text-center pt-3">報告編集</h1>
+    <div class="container p-3">
+        <div class="card">
+            <div class="card-body">
+                <form class="row g-3 pe-3 ps-3 pb-3" th:action="@{/member/report/update}" th:object="${reportUpdateInput}"
+                      method="post">
+
+                    <div>
+                        <input type="hidden" name="reportId" th:value="${report.id}"/>
+                    </div>
+
+                    <div class="d-flex">
+
+                    <div id= "date_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-3" style="width:220px;">
+                        <p class="text-center mt-3">日付</p>
+                        <div class="cs-form">
+                            <input type="date" class="form-control" th:value="${report.date}" required
+                                   disabled/>
+                        </div>
+                    </div>
+                    <input  type="hidden" class="form-control" name="date" th:value="${report.date}">
+                    <div id= "startTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-3" style="width:200px;">
+                        <p class="text-center mt-3">出勤時間</p>
+                        <div class="cs-form">
+                            <input type="time" class="form-control" name="startTime" th:value="${report.startTime}"
+                                   required/>
+                        </div>
+                    </div>
+                    <div id= "endTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-3"  style="width:200px;">
+                        <p class="text-center mt-3">退勤時間</p>
+                        <div class="cs-form">
+                            <input type="time" class="form-control" name="endTime" th:value="${report.endTime}" required/>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div th:if="${settingInput.employment == true}">
+                        <label class="text-nowrap" th:text="${reason}" style="color: red;"></label>
+                        <label for="text_latenessReason"></label>
+                        <input name="latenessReason" class="form-control" id="text_latenessReason" rows="3" maxlength="100"
+                               th:field="${report.latenessReason}" required>
+                        <span id="charCountLt" style="margin-left: 5px;"></span>
+                        <input type="hidden" th:field="${settingInput.employment}" th:value="true">
+                    </div>
+
+<!--                    <div class="col-md-12 d-flex flex-row gap-5">-->
+<!--                        <label>※遅刻・早退の場合はチェックマーク</label>-->
+<!--                    </div>-->
+<!--                    <div id = "radio-check_mb" class="col-md-12 d-flex flex-row gap-5">-->
+<!--                        <div class="form-check">-->
+<!--                            <input class="form-check-input" type="checkbox" id="check_Lateness"-->
+<!--                                   name="isLateness" th:checked="${report.isLateness}"/>-->
+<!--                            <label class="form-check-label" for="check_Lateness">遅刻</label>-->
+<!--                        </div>-->
+
+<!--                        <div class="form-check">-->
+<!--                            <input class="form-check-input" type="checkbox" id="check_LeftEarly"-->
+<!--                                   name="isLeftEarly" th:checked="${report.isLeftEarly}"/>-->
+<!--                            <label class="form-check-label" for="check_LeftEarly">早退</label>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+                    <!--編集----------------------------------------------->
+<!--                    <div class="col-12 d-flex flex-row align-items-center gap-3">-->
+<!--                        <div>-->
+<!--                        <label class="text-nowrap">※チェックを付けた場合は理由を記入</label>-->
+<!--                        <label for="text_latenessReason"></label><input name="latenessReason" class="form-control"-->
+<!--                                                                           id="text_latenessReason" th:value="${report.latenessReason}"-->
+<!--                                                                           rows="3"  maxlength="100" required>-->
+<!--                            <span id="charCountLt" style="margin-left: 5px;"></span>-->
+<!--                    </div>-->
+                    <!--編集----------------------------------------------->
+                    <!--追記----------------------------------------------->
+                    <div class="form-group">
+                        <p>本日の体調</p>
+                        <input type="radio" th:value="1" th:name="conditionRate" required
+                               th:checked="${report.conditionRate == 1}"><i class="bi bi-emoji-smile-fill text-success pe-3" style="font-size: 4rem;"></i>
+                        <input type="radio" th:value="2" th:name="conditionRate" required
+                               th:checked="${report.conditionRate == 2}"><i class="bi bi-emoji-neutral-fill text-warning pe-3" style="font-size: 4rem;"></i>
+                        <input type="radio" th:value="3" th:name="conditionRate" required
+                               th:checked="${report.conditionRate == 3}"><i class="bi bi-emoji-dizzy-fill text-danger" style="font-size: 4rem;"></i>
+                    </div>
+
+<!--                    <div class="col-12 d-flex flex-row align-items-center gap-3">-->
+                        <div>
+                        <label class="text-nowrap">体調コメント</label>
+                        <label for="text_condition"></label><input name="condition" class="form-control"
+                                                                      id="text_condition"
+                                                                      rows="3" maxlength="50" th:value="${report.condition}" required>
+                        <span id="charCount" style="margin-left: 5px;"></span>
+                    </div>
+                    <!--追記----------------------------------------------->
+<!--                    <div class="col-12 d-flex flex-row align-items-center gap-3">-->
+                        <div>
+                        <label class="text-nowrap">報告内容</label>
+                        <label for="text_impressions"></label><textarea name="impressions" class="form-control"
+                                                                        id="text_impressions"
+                                                                        rows="3" maxlength="300" required>[[${report.impressions}]]</textarea>
+                            <span id="charCount-im" style="margin-left: 5px;"></span>
+                    </div>
+<!--                    <div class="col-12 d-flex flex-row align-items-center gap-3">-->
+                        <div>
+                        <label class="text-nowrap">明日の予定</label>
+                        <label for="text_tomorrowSchedule"></label><textarea class="form-control"
+                                                                             name="tomorrowSchedule"
+                                                                             id="text_tomorrowSchedule"
+                                                                             rows="3" maxlength="200" required>[[${report.tomorrowSchedule}]]</textarea>
+                            <span id="charCount-tom" style="margin-left: 5px;"></span>
+                    </div>
+                    <div class="col-12 d-flex flex-column gap-2" id="todo-field">
+                        <div class="d-flex gap-2">
+                            <p class="d-inline d-inline-block p-0 m-0">Todo（メモ帳)</p>
+                            <button type="button" class="btn btn-secondary" id="add-todo">追加</button>
+                        </div>
+                        <!-- タスクの入力フィールド -->
+                        <div th:each="taskLog, taskLogStatus : ${taskLogs}" class="row">
+                            <div class="flex-row d-flex gap-3 col-md-8">
+                                <input type="text" class="form-control" placeholder="タスク名（最大100文字）" aria-label=""
+                                       th:name="${'taskLogs[' + taskLogStatus.index + '].taskName'}"
+                                       th:value="${taskLog.taskName}" maxlength="100" required>
+                                <input type="number" class="form-control" placeholder="進捗率" aria-label=""
+                                       th:name="${'taskLogs[' + taskLogStatus.index + '].progressRate'}"
+                                       th:value="${taskLog.progressRate}" min="0" max="100" required>
+                                <input type="text" class="form-control" placeholder="コメント（最大300文字）"
+                                       aria-label=""
+                                       th:name="${'taskLogs[' + taskLogStatus.index + '].comment'}"
+                                       th:value="${taskLog.comment}" maxlength="300" required>
+                                <input type="hidden" class="form-control"
+                                       th:name="${'taskLogs[' + taskLogStatus.index + '].taskId'}"
+                                       th:value="${taskLog.taskId}" required>
+                                <button type="button" class="btn btn-danger" onclick="removeTask(this)">削除</button>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="w-100 btn btn-lg btn-success">更新</button>
+                    </div>
+<!--                    前の画面（詳細）に戻る-->
+                    <div class="text-center">
+                        <a class="w-100 btn btn-lg btn-secondary" onclick="goBack()">戻る</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style layout:fragment="style">
+    .btn-danger {
+            white-space: nowrap;
+            float: left;
+        }
+        @media (max-width: 768px) {
+            .overflow-x-hidden {
+                overflow-x: hidden !important;
+            }
+            .d-flex {
+                display: block !important;
+            }
+
+            #startTime_mb, #endTime_mb, #date_mb, #radio-check_mb {
+                display: flex !important;
+            }
+
+            .row .d-flex {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            #form-select_mb{
+                width : 100%;
+            }
+
+            .d-flex input[type="text"] {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            .d-flex input[type="number"] {
+                margin-bottom: 5px;
+                width : 50%;
+            }
+        }
+
+        @media (min-width: 769px) {
+            #form-select_mb{
+                width : 300px;
+            }
+        }
+</style>
+<script layout:fragment="script" th:inline="javascript">
+    function goBack() {
+        window.history.back();
+    }
+
+    const elem = document.getElementById("add-todo");
+const todoField = document.getElementById("todo-field");
+let taskIndex = /*[[${taskLogs.size()}]]*/;
+
+elem.onclick = function() {
+  const node = document.createElement("div");
+  node.setAttribute("class", "row");
+  node.innerHTML += `<div class="flex-row d-flex gap-3 col-md-8">
+                            <input type="text" class="form-control" placeholder="タスク名（最大100文字）" aria-label=""
+                                   name="${'taskLogs[' + taskIndex + '].taskName'}" maxlength="100" required>
+                            <input type="number" class="form-control" placeholder="進捗率" aria-label=""
+                                   name="${'taskLogs[' + taskIndex + '].progressRate'}" min="0" max="100" required>
+                            <input type="text" class="form-control" placeholder="コメント（最大300文字）" aria-label=""
+                                   name="${'taskLogs[' + taskIndex + '].comment'}" maxlength="300" required>
+                            <button type="button" class="btn btn-danger" onclick="removeTask(this)">削除</button>
+                        </div>`;
+
+  todoField.appendChild(node);
+  taskIndex++;
+};
+
+function removeTask(button) {
+   button.parentNode.parentNode.remove();
+}
+/*]]>*/
+
+//体調コメント文字数制限５０文字
+const textCondition = document.getElementById('text_condition');
+const charCount = document.getElementById('charCount');
+
+textCondition.addEventListener('input', function () {
+    const remainingChars = 50 - this.value.length;
+    charCount.textContent = '残り文字数: ' + remainingChars;
+
+    // 文字数が50を超える場合、入力を制限
+    if (remainingChars < 0) {
+        this.value = this.value.slice(0, 50);
+        charCount.textContent = '残り文字数: 0';
+    }
+});
+
+    //報告内容文字数制限300文字
+const textImpressions = document.getElementById('text_impressions');
+const charCountIm = document.getElementById('charCount-im');
+
+textImpressions.addEventListener('input', function () {
+    const remainingCharsIm = 300 - this.value.length;
+    charCountIm.textContent = '残り文字数: ' + remainingCharsIm;
+
+    // 文字数が300を超える場合、入力を制限
+    if (remainingCharsIm < 0) {
+        this.value = this.value.slice(0, 300);
+        charCountIm.textContent = '残り文字数: 0';
+    }
+});
+
+//明日の予定文字数制限200文字
+const textTomorrow = document.getElementById('text_tomorrowSchedule');
+const charCountTom = document.getElementById('charCount-tom');
+
+textTomorrow.addEventListener('input', function () {
+    const remainingCharsTom = 200 - this.value.length;
+    charCountTom.textContent = '残り文字数: ' + remainingCharsTom;
+
+    // 文字数が200を超える場合、入力を制限
+    if (remainingCharsTom < 0) {
+        this.value = this.value.slice(0, 200);
+        charCountTom.textContent = '残り文字数: 0';
+    }
+});
+
+
+//遅刻理由文字数制限100文字
+const textLate = document.getElementById('text_latenessReason');
+const charCountLat = document.getElementById('charCountLt');
+
+textLate.addEventListener('input', function () {
+    const remainingCharsLat = 100 - this.value.length;
+    charCountLat.textContent = '残り文字数: ' + remainingCharsLat;
+
+    // 文字数が100を超える場合、入力を制限
+    if (remainingCharsLat < 0) {
+        this.value = this.value.slice(0, 100);
+        charCountLat.textContent = '残り文字数: 0';
+    }
+});
+
+</script>
+</body>
+</html>

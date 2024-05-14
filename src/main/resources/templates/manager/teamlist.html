@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+    <style>
+        .button-column {
+            width: 6%;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <div th:if="${deleteCompleteMSG}">
+        <div class="flash flash-success alert alert-dismissible fade show" role="alert">
+            <span th:text="${deleteCompleteMSG}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${editCompleteMSG}">
+        <div class="flash flash-success alert alert-dismissible fade show" role="alert">
+            <span th:text="${editCompleteMSG}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${createCompleteMSG}">
+        <div class="flash flash-success alert alert-dismissible fade show" role="alert">
+            <span th:text="${createCompleteMSG}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <h1 class="text-center mt-3">チーム一覧</h1>
+    <div class="button-box">
+        <a th:href=@{/manager/team-create} class="btn btn-success">チーム作成</a>
+    </div>
+    <table class="StripeTable">
+        <thead>
+        <tr>
+            <th>チーム名</th>
+            <th class="button-column">詳細</th>
+            <th class="button-column">編集</th>
+            <th class="button-column">削除</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="teamList : ${teamList}" th:object="${teamList}">
+            <td th:text="${teamList.name}"></td>
+            <td>
+                <a th:href="@{'/manager/teams/' + ${teamList.teamId} + '/detail'}">
+                    <button type="button" class="btn btn-outline-secondary">詳細</button>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{'/manager/teams/' + ${teamList.teamId} + '/edit'}">
+                    <button type="button" class="btn btn-outline-success">編集</button>
+                </a>
+            </td>
+            <td>
+                <form th:action="@{'/manager/teams/' + ${teamList.teamId} + '/delete'}" method="post" class="form-inline" onSubmit="return check()">
+                    <input type="hidden" name="teamId" th:value="${teamList.teamId}" />
+                    <button type="submit" class="btn btn-outline-danger">削除</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+
+<script>
+    function check() {
+        if (window.confirm('このチームを削除しますか？')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+</script>

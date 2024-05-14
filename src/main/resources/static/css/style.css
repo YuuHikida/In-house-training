@@ -1,0 +1,284 @@
+.logo-home{
+   margin-right: auto;
+  margin-left: auto;
+  margin-top: 130px;
+  text-align: center;
+  animation: transscaleX 0.7s ease 0s 1 normal;
+  max-width: 95%;
+  height: auto;
+}
+
+.logo-main{
+    border:10px solid #02990E;
+    max-width: 95%;
+    height: auto;
+}
+
+/* transscaleX */
+@keyframes transscaleX {
+  0% {
+    transform:scaleX(0);
+  }
+  100% {
+    transform:scaleX(1);
+  }
+}
+
+
+.home-name {
+  margin-top:50px;
+  animation-name: fadein;
+  animation-duration: 1s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadein {
+  0% {
+     opacity: 0;
+     transform: translateY(20px);
+  }
+  100% {
+     opacity: 1;
+     transform: translateY(0);
+  }
+}
+
+.DatailTable {
+    text-align:center;
+    width:90%;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+.DatailTable tr {
+  border: 1px solid #C0C0C0;
+}
+
+.OneColorTable {
+    text-align:center;
+    width:90%;
+    margin-right:auto;
+    margin-left:auto;
+    background-color:#e4f4e5;
+    border-collapse:collapse;
+    border: 1px solid #C0C0C0;
+}
+
+.OneColorTable tr td {
+  border: 1px solid #C0C0C0;
+}
+
+.StripeTable {
+text-align:center;
+width:90%;
+margin-right:auto;
+margin-left:auto;
+background-color:#e4f4e5;
+  border-collapse:collapse;
+  border: 1px solid #C0C0C0;
+}
+
+.StripeTable tr:nth-child(odd) {
+  background-color:#e4f4e5;
+}
+
+.StripeTable tr:nth-child(even) {
+  background-color:#f5f5f5;
+}
+
+.StripeTable tr td {
+  border: 1px solid #C0C0C0;
+}
+.container-usercreate{
+margin-right:auto;
+margin-left:auto;
+padding:12px;
+}
+
+.button-box{
+text-align:center;
+margin-top:12px;
+margin-bottom:12px;
+margin-right:auto;
+margin-left:auto;
+}
+.btn {
+    white-space: nowrap;
+    margin : 3px;
+}
+
+.lg-title{
+color:#02990E;
+text-align:center;
+}
+
+.lg-logo{
+margin-top:60px;
+margin-right: auto;
+margin-left: auto;
+text-align: center;
+}
+
+.login-logo{
+height:100px;
+width:auto;
+border:6px solid #02990E;
+}
+
+.container-main{
+margin-right: auto;
+margin-left: auto;
+padding:12px;
+}
+
+.container-sub{
+display:grid;
+grid-gap: 6px;
+grid-template-columns: 1fr 1fr;
+}
+
+.main-right{
+margin:6px;
+text-align:center;
+border: 1px solid #C0C0C0;
+background:#e4f4e5;
+padding:12px;
+}
+
+.main-left{
+margin:6px;
+text-align:center;
+border: 1px solid #C0C0C0;
+background:#f5f5f5;
+padding:12px;
+}
+
+.member-container {
+border:1px solid #C0C0C0;
+background:#f5f5f5;
+padding:12px;
+margin-right:auto;
+margin-left:auto;
+margin-bottom:12px;
+}
+
+.report-container {
+margin:1rem;
+}
+
+.attendance-boxL {
+border:1px solid #C0C0C0;
+background:#f5f5f5;
+padding:12px;
+min-height:270px;
+margin-top:12px;
+}
+
+.attendance-boxR {
+border:1px solid #C0C0C0;
+background:#e4f4e5;
+padding:12px;
+min-height:270px;
+margin-top:12px;
+}
+
+.repo-todo-boxL {
+border:1px solid #C0C0C0;
+background:#e4f4e5;
+padding:12px;
+margin-top:12px;
+min-height:290px;
+}
+
+.repo-todo-boxR {
+border:1px solid #C0C0C0;
+background:#f5f5f5;
+padding:12px;
+margin-top:12px;
+min-height:290px;
+}
+
+.pagetop {
+  cursor: pointer;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  transition: .3s;
+  color: white;
+  background: #02990E;
+
+  opacity: 0;
+}
+.pagetop:hover {
+    box-shadow: 0 0 10px #007C0A;
+}
+
+.main-box {
+border:6px solid #02990E;
+background:#02990E;
+margin:6px;
+}
+
+.icon-box img{
+height:60px;
+width:60px;
+object-fit: cover;
+border-radius: 50%;
+}
+
+.flash {
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  margin: 8px;
+}
+
+.flash-success {
+  border: 2px solid #02990E;
+  background:#e4f4e5;
+}
+
+.flash-warning {
+  border: 2px solid #FFC65A;
+}
+
+.flash-danger {
+  border: 2px solid #FD1015;
+  background:#FFB6C1;
+
+}
+
+.mgrRelease {
+    text-align: center;
+    border: 1px solid red;
+    width: 200px;
+    margin: auto;
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+    line-height: 1em;
+    height: 2em;
+    color: red;
+}
+
+.teamRelease {
+    text-align: center;
+    border: 1px solid green;
+    width: 160px;
+    margin: auto;
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+    line-height: 1em;
+    height: 2em;
+    color: green;
+}

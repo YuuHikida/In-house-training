@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div th:if="${deleteCompleteMSG}">
+        <div class="flash flash-success alert alert-dismissible fade show" role="alert">
+            <span th:text="${deleteCompleteMSG}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${createCompleteMSG}">
+        <div class="flash flash-success alert alert-dismissible fade show" role="alert">
+            <span th:text="${createCompleteMSG}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${errorAstMsg}">
+        <div class="flash flash-danger alert alert-dismissible fade show" role="alert">
+            <span th:text="${errorAstMsg}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+    <h1 th:object="${team}" th:text="*{name}" class="text-center"></h1>
+    <div class="button-box">
+        <form th:action="@{'/manager/assignment/' + ${team.teamId}}" method="get">
+            <input type="hidden" name="teamId" th:value="${team.teamId}" />
+            <input type="submit" value="メンバー追加" class="btn btn-success" />
+        </form>
+    </div>
+    <div th:if="${team.release}">
+        <p class="teamRelease">チーム公開</p>
+    </div>
+    <div th:if="${!team.release}">
+        <p class="mgrRelease">マネージャー限定公開</p>
+    </div>
+
+    <h5 class="text-center">Managers</h5>
+    <table class="StripeTable">
+        <thead>
+        <tr>
+            <th>名前</th>
+            <th>アイコン</th>
+            <th>削除</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mgr : ${managers}">
+            <td th:text="${mgr.name}" style="width:50%;"></td>
+            <td>
+                <div class="icon-box">
+                    <img th:src="'data:image/png;base64,' + ${mgr.icon}"
+                         class="rounded-circle"/>
+                </div>
+            </td>
+            <td style="width:62px;">
+                <form th:action="@{'/manager/assignment/' + ${team.teamId} + '/' + ${mgr.employeeCode} +'/delete'}" method="post" onSubmit="return check()">
+                    <input type="hidden" name="teamId" th:value="${team.teamId}" />
+                    <input type="hidden" name="employeeCode" th:value="${mgr.employeeCode}" />
+                    <input type="submit" value="削除" class="btn btn-outline-danger" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+<!--    <ul th:each="mgr : ${managers}">-->
+<!--        <li th:text="${mgr.name}"></li>-->
+<!--        <form th:action="@{'/manager/assignment/' + ${team.teamId} + '/' + ${mgr.employeeCode} +'/delete'}" method="post" onSubmit="return check()">-->
+<!--            <input type="hidden" name="teamId" th:value="${team.teamId}" />-->
+<!--            <input type="hidden" name="employeeCode" th:value="${mgr.employeeCode}" />-->
+<!--            <input type="submit" value="削除" class="btn btn-danger" />-->
+<!--        </form>-->
+<!--    </ul>-->
+
+    <h5 class="text-center">Members</h5>
+    <table class="StripeTable">
+        <thead>
+        <tr>
+            <th>名前</th>
+            <th>アイコン</th>
+            <th>削除</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mem : ${members} ">
+            <td th:text="${mem.name}" style="width:50%;"></td>
+            <td>
+                <div class="icon-box">
+                <img th:src="'data:image/png;base64,' + ${mem.icon}"
+                     class="rounded-circle"/>
+            </div>
+            </td>
+            <td style="width:62px;">
+                <form th:action="@{'/manager/assignment/' + ${team.teamId} + '/' + ${mem.employeeCode} +'/delete'}" method="post" onSubmit="return check()">
+                    <input type="hidden" name="teamId" th:value="${team.teamId}" />
+                    <input type="hidden" name="employeeCode" th:value="${mem.employeeCode}" />
+                    <input type="submit" value="削除" class="btn btn-outline-danger" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+<!--    <ul th:each="mem : ${members} ">-->
+<!--        <li th:text="${mem.name}"></li>-->
+<!--        <form th:action="@{'/manager/assignment/' + ${team.teamId} + '/' + ${mem.employeeCode} +'/delete'}" method="post" onSubmit="return check()">-->
+<!--            <input type="hidden" name="teamId" th:value="${team.teamId}" />-->
+<!--            <input type="hidden" name="employeeCode" th:value="${mem.employeeCode}" />-->
+<!--            <input type="submit" value="削除" class="btn btn-danger" />-->
+<!--        </form>-->
+<!--    </ul>-->
+
+    <div class="button-box">
+        <a th:href=@{/manager/teamlist}>チーム一覧に戻る</a>
+    </div>
+
+</div>
+<script layout:fragment="script">
+    function check() {
+   if (window.confirm('このメンバーをチームから削除しますか？')) {
+   return true;
+   } else {
+   return false;
+   }
+   }
+</script>
+</body>
+</html>

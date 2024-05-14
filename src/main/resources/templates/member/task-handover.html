@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const members = /*[[${taskList}]]*/;
+        /*]]>*/
+    </script>
+    <script type="text/javascript" th:src="@{/js/handover.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div th:if="${error}">
+        <div class="flash flash-danger alert alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <a data-bs-dismiss="alert" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="container mt-4">
+
+        <div class="form-group mb-3 d-flex" style="justify-content: center;">
+
+            <div style="width: 200px;">
+                <p style="margin-bottom: auto;">引継ぎ元 チームメンバー</p>
+                <select id="memberSelect" class="form-select"><!--onchange="displaySelectedMemberInfo()"-->
+                    <option th:each="member : ${taskList}" th:value="${member.employeeCode}" th:text="${member.name}"></option>
+                </select>
+                <p style="margin-bottom: auto;margin-top: 20px;">タスク</p>
+                <select id="selectedUserTask" class="form-select"></select>
+            </div>
+
+            <div style="margin-left: 20px;margin-right: 10px;margin-top: auto;margin-bottom: auto;">
+                <img src="/img/右向き矢印.png" width="60" height="70" alt="右向き矢印">
+            </div>
+
+            <div style="margin-left: 10px;margin-right: 20px;width: 200px;">
+                <p style="margin-bottom: auto;">引継ぎ先 チームメンバー</p>
+                <select id="memberSelectAfter" class="form-select"></select>
+            </div>
+
+            <div style="margin-bottom: auto;margin-top: auto;">
+                <button id="addTaskList" class="btn btn-primary">タスク引き継ぐ</button>
+            </div>
+
+        </div>
+
+        <div style="text-align: center;margin-bottom: 30px;">
+            <button id="checkTaskList" class="btn btn-success">確認</button>
+            <button id="test" class="btn btn-success">test</button>
+        </div>
+
+        <div class="form-group mb-3 d-flex" style="justify-content: center;">
+            <div id="table-container-before" style="width: 300px;"></div>
+            <div id="table-container-after" style="width: 300px;"></div>
+        </div>
+
+    </div>
+</div>
+<style layout:fragment="style"></style>
+<script layout:fragment="script" th:inline="javascript">
+    let afterMember = [];
+    let beforeMember = [];
+
+    //引継ぎ元チームメンバーの初期表示メンバーのタスクが表示されない問題
+    //一旦他のメンバーに変更して戻してやっとタスクが表示されるので、解消する
+    //ページが読み込まれた時に引継ぎ元チームメンバーを基にタスクを表示してやればいい
+    //つまり、読み込まれたと同時に「document.getElementById('memberSelect').addEventListener('change', function() {});」
+    //と同じ処理を実行すればいい
+    window.onload = function() {
+        console.log('来てる？');
+
+        //model.addAttribute("taskList",teamTasks)によって受け渡しされたチームメンバーと各自の所持タスクデータ
+        const members = /*[[${taskList}]]*/;
+
+        //引継ぎ元のemployeeCode
+        const member = document.getElementById("memberSelect").value
+
+        //引継ぎ対象のタスク
+        let taskList = document.getElementById("selectedUserTask");
+
+        //プルダウン初期化
+        taskList.innerHTML = "";
+
+        for(let i = 0; i < members.length; i++){
+            if(members[i].employeeCode == member){
+                for(let j = 0; j < members[i].tasks.length; j++){
+                    let option = document.createElement("option");
+                    option.value = members[i].tasks[j].taskId;
+                    option.text = members[i].tasks[j].taskName;
+                    taskList.add(option);
+                }
+            }
+        }
+
+        //引継ぎ先のプルダウン
+        let afterMember = document.getElementById("memberSelectAfter")
+
+        //プルダウン初期化
+        afterMember.innerHTML = "";
+
+        for(let i = 0; i < members.length; i++){
+            if(members[i].employeeCode != member){
+                let option = document.createElement("option");
+                option.value = members[i].employeeCode;
+                option.text = members[i].name;
+                afterMember.add(option);
+            }
+        }
+    }
+
+
+    //引継ぎ元チームメンバーを変更した時に実行される
+    document.getElementById('memberSelect').addEventListener('change', function() {
+
+    //↓↓↓↓↓変数宣言↓↓↓↓↓
+        //model.addAttribute("taskList",teamTasks)によって受け渡しされたチームメンバーと各自の所持タスクデータ
+        let members = /*[[${taskList}]]*/;
+
+        //引継ぎ元のemployeeCode
+        let member = document.getElementById("memberSelect").value
+
+        //引継ぎ対象のタスク
+        var taskList = document.getElementById("selectedUserTask");
+    //↑↑↑↑↑変数宣言↑↑↑↑↑
+
+
+        //プルダウン初期化
+        taskList.innerHTML = "";
+
+        //memberSelectで選択したメンバーが所持しているタスクを取得しselectedUserTaskに設定する
+        for(var i = 0; i < members.length; i++){
+            if(members[i].employeeCode == member){
+                for (var j = 0; j < members[i].tasks.length; j++) {
+                    var option = document.createElement("option");
+                    option.value = members[i].tasks[j].taskId;
+                    option.text = members[i].tasks[j].taskName;
+                    taskList.add(option);
+                }
+            }
+        }
+
+        //引継ぎ先のプルダウン
+        let afterMember = document.getElementById("memberSelectAfter")
+
+        //プルダウン初期化
+        afterMember.innerHTML = "";
+
+        for(let i = 0; i < members.length; i++){
+            if(members[i].employeeCode != member){
+                let option = document.createElement("option");
+                option.value = members[i].employeeCode;
+                option.text = members[i].name;
+                afterMember.add(option);
+            }
+        }
+
+
+
+    });
+
+    //タスクを引き継ぐボタンの押下で実行される
+    document.getElementById('addTaskList').addEventListener('click', function() {
+
+        //オブジェクト情報取得
+        let members = /*[[${taskList}]]*/;
+
+//***test***後ほど削除******************************
+        console.log('↓↓↓全て↓↓↓');
+        console.log(members);
+//***test***後ほど削除******************************
+
+        //引継ぎ元のemployeeCodeとtaskIdを取得
+        let memberB = document.getElementById("memberSelect").value;
+        let taskIdB = document.getElementById("selectedUserTask").value;
+
+//***test***後ほど削除******************************
+        let FilterMemberB = [];
+        for(let i = 0; i < members.length; i++){
+            if(members[i].employeeCode == memberB){
+                FilterMemberB.push(members[i]);
+            }
+        }
+        console.log('↓↓↓引き継グ前のタスク↓↓↓');
+        console.log(FilterMemberB);
+//***test***後ほど削除******************************
+
+        //引継ぎ先のemployeeCode
+        //let memberA = document.getElementById("memberSelectAfter").value;
+        let memberA = parseInt(document.getElementById("memberSelectAfter").value);
+
+//***test***後ほど削除******************************
+        let FilterMemberA = [];
+        for(let i = 0; i < members.length; i++){
+            if(members[i].employeeCode == memberA){
+                FilterMemberA.push(members[i]);
+            }
+        }
+        console.log('↓↓↓引き継がれる前のタスク↓↓↓');
+        console.log(FilterMemberA);
+//***test***後ほど削除******************************
+
+        //引継ぎ元の取得データをオブジェクトから削除したものを作成
+        //let beforeMember = [];
+        for(let i = 0; i < members.length; i++){
+            let member = members[i];
+            if(member.employeeCode == memberB){
+                let filteredTasks = [];
+                for(let j = 0; j < member.tasks.length; j++){
+                    if(member.tasks[j].taskId != taskIdB){
+                        filteredTasks.push(member.tasks[j]);
+                    }
+                }
+                // もしfilteredTasksが空でなければ、beforeMemberに追加
+                if (filteredTasks.length > 0) {
+                    beforeMember.push({
+                        name: member.name,
+                        employeeCode: member.employeeCode,
+                        tasks: filteredTasks
+                    });
+                }
+//***test***後ほど削除******************************
+                console.log('↓↓↓引き継いだ後の残ったタスク↓↓↓');
+                console.log(beforeMember);
+//***test***後ほど削除******************************
+            }
+        }
+
+        //引継ぎ元先のデータを作成
+        //let afterMember = [];
+        let filteredTasks = [];
+        var afterName = '';
+        for(let i = 0; i < members.length; i++){
+            let member = members[i];
+            if(member.employeeCode == memberA){
+                afterName = member.name;
+                for(let j = 0; j < member.tasks.length; j++){
+                    filteredTasks.push(member.tasks[j]);
+                }
+            }
+        }
+        //引き継がれるタスク情報を作成
+        for(let i = 0; i < members.length; i++){
+            if(members[i].employeeCode == memberB){
+                for(let j = 0; j < members[i].tasks.length; j++){
+                    if(members[i].tasks[j].taskId == taskIdB){
+                        filteredTasks.push(members[i].tasks[j]);
+                    }
+                }
+            }
+        }
+        //引継ぎ元先のデータと引き継がれるタスク情報を合成
+        if (filteredTasks.length > 0) {
+            afterMember.push({
+                name: afterName,
+                employeeCode: memberA,
+                tasks: filteredTasks
+            });
+        }
+//***test***後ほど削除******************************
+        console.log('↓↓↓引き継いだものを含めたタスク↓↓↓');
+        console.log(afterMember);
+//***test***後ほど削除******************************
+    });
+
+
+    //引き継いだ後のデータ「beforeMember」と
+    //引き継がれた後のデータ「afterMember」を
+    //使用してテーブルを作成
+    document.getElementById('checkTaskList').addEventListener('click', function() {
+
+        //テーブルを表示するHTML要素を取得する
+        let beforeTableContainer = document.getElementById('table-container-before');
+        let afterTableContainer  = document.getElementById('table-container-after');
+
+        //テーブル要素を作成する
+        let tableBefore = document.createElement('table');
+        let tableAfter = document.createElement('table');
+
+        //テーブルのクラスを追加する
+        tableBefore.classList.add('StripeTable', 'mb-4');
+        tableAfter.classList.add('StripeTable', 'mb-4');
+
+        //テーブルのヘッダーを作成するbefore
+        let headerRowB = tableBefore.insertRow();
+        let headerCellB = document.createElement('th');
+        headerCellB.textContent = 'タスク名';
+        headerRowB.appendChild(headerCellB);
+        //テーブルのヘッダーを作成するafter
+        let headerRowA = tableAfter.insertRow();
+        let headerCellA = document.createElement('th');
+        headerCellA.textContent = 'タスク名';
+        headerRowA.appendChild(headerCellA);
+
+        //データをテーブルに追加before
+        console.log(beforeMember);
+        beforeMember.forEach(function (addTaskList) {
+            addTaskList.tasks.forEach(function (task) {
+                let row = tableBefore.insertRow();
+                let cell = row.insertCell();
+                cell.textContent = task.taskName;
+            });
+        });
+
+        //データをテーブルに追加after
+        console.log(afterMember);
+        const afterEmployeeCode = document.getElementById('memberSelectAfter').value
+        afterMember.forEach(function (addTaskList) {
+            addTaskList.tasks.forEach(function (task) {
+                let row = tableAfter.insertRow();
+                let cell = row.insertCell();
+                //cell.textContent = task.taskName;
+                if(task.employeeCode == afterEmployeeCode){
+                    cell.textContent = task.taskName;
+                }else{
+                    cell.innerHTML = task.taskName + '<sup style="vertical-align: top; font-size:xx-small; line-height: 2; color: red;">NEW</sup>';
+                }
+
+            });
+        });
+
+        //テーブルをHTMLに追加
+        beforeTableContainer.appendChild(tableBefore);
+        afterTableContainer.appendChild(tableAfter);
+    });
+
+
+</script>
+
+</body>
+</html>
+
