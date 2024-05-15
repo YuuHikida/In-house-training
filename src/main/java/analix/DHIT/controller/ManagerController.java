@@ -790,6 +790,13 @@ public class ManagerController {
     @Transactional
     @PostMapping("/team-create")
     public String createTeam(TeamCreateInput teamCreateInput, RedirectAttributes redirectAttributes){
+
+        //引数チェック
+        String[] employeeCodeIsManager = teamCreateInput.getEmployeeCodeIsManager();
+        String[] employeeCodeIsMember = teamCreateInput.getEmployeeCodeIsMember();
+        //
+//        foreach(int[] x : employeeCodeIsManager)
+
         //TeamId作成
         int newTeamId = teamService.create(
                 teamCreateInput.getName(),

@@ -10,8 +10,8 @@ public class TeamCreateInput {
     private String name;
     private boolean release;
     //チームに人を入れるために追加
-    private int[] employeeCodeIsManager;
-    private  int[] employeeCodeIsMember;
+    private String[] employeeCodeIsManager;
+    private  String[] employeeCodeIsMember;
 
     public String getName() {
         return name;
@@ -27,19 +27,19 @@ public class TeamCreateInput {
         this.release=release;
     }
 
-    public void setEmployeeCodeIsManager(int[] employeeCodeIsManager) {
-        this.employeeCodeIsManager = employeeCodeIsManager;
-    }
-
-    public int[] getEmployeeCodeIsManager() {
+    public String[] getEmployeeCodeIsManager() {
         return employeeCodeIsManager;
     }
 
-    public void setEmployeeCodeIsMember(int[] employeeCodeIsMember) {
-        this.employeeCodeIsMember = employeeCodeIsMember;
+    public String[] getEmployeeCodeIsMember() {
+        return employeeCodeIsMember;
     }
 
-    public int[] getEmployeeCodeIsMember() {
-        return employeeCodeIsMember;
+    public void setEmployeeCodeIsManager(String[] employeeCodeIsManager) {
+        this.employeeCodeIsManager = employeeCodeIsManager;
+    }
+
+    public void setEmployeeCodeIsMember(String[] employeeCodeIsMember) {
+        this.employeeCodeIsMember = employeeCodeIsMember;
     }
 }

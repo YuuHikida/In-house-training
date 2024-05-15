@@ -4,6 +4,7 @@
       layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8" th:remove="tag">
+
     <script th:src="@{/js/deleteAndAddUser.js}"></script>
 </head>
 <body>
@@ -11,8 +12,7 @@
     <div class="container mt-3">
     <h1 class="text-center">新規チーム作成</h1>
     <div class="container-form">
-<form th:action="@{/manager/team-create}" th:object="${TeamCreateInput}"
-      method="post">
+<form id = "myForm" th:action="@{/manager/team-create}" th:object="${TeamCreateInput}" method="post" >
     <div class="form-group mb-3">
         <label>チーム名（最大30文字）</label>
         <input name="name" class="form-control" maxlength="30" required/>
@@ -29,23 +29,21 @@
     <label >メンバーの追加</label><br>
         <label>Manager</label>
         <div class="form-group mb-3 d-flex">
-            <select id="managerList" class="form-select" multiple>
-                <option th:each="manager : ${managers}" th:text="${manager.name}"
-                        th:value="${manager.employeeCode}"></option>
+            <select id="managerList" class="form-select"  name="employeeCodeIsManager" multiple>
+                <option th:each="manager : ${managers}" th:text="${manager.name}"></option>
             </select>
             <div>
                 <button type="button" onclick="addManager()" class="btn btn-success">←追加</button>
                 <button type="button" onclick="removeManager()" class="btn btn-success">→削除</button>
             </div>
             <select id="userList" class="form-select" multiple>
-                <option th:each="user : ${users}" th:text="${user.name}"
-                        th:value="${user.employeeCode}"></option>
+                <option th:each="user : ${users}" th:text="${user.name}"></option>
             </select>
         </div>
 
         <label>Member</label>
         <div class="form-group mb-3 d-flex">
-            <select id="memberList" class="form-select" name="employeeCode" multiple>
+            <select id="memberList" class="form-select" name= "employeeCodeIsMember" multiple>
                 <option th:each="member : ${members}" th:text="${member.name}"
                         th:value="${member.employeeCode}"></option>
             </select>
@@ -59,13 +57,13 @@
             </select>
         </div>
 
-        <input id="managerInput" name="employeeCodeIsManager" type="hidden" >
-        <input id="memberInput" name="employeeCodeIsMember" type="hidden">
+<!--        <input id="managerInput" name="employeeCodeIsManager" type="hidden" >-->
+<!--        <input id="memberInput" name="employeeCodeIsMember" type="hidden" >-->
 <!--        <button type="submit" class="w-100 btn btn-lg btn-success"  onclick="setListValues()">追加</button>-->
 <!--    </form>-->
 <!--    ************************-->
     <div class="form-group">
-        <button type="submit" class="w-100 btn btn-lg btn-success">作成</button>
+        <button type="submit" id = "create" class="w-100 btn btn-lg btn-success" onclick="setListValues()">作成</button>
     </div>
 </form>
     </div>

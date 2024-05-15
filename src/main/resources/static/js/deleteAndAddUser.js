@@ -1,4 +1,24 @@
+ //dbgprint
+ document.getElementById("myForm").addEventListener("submit", function(event) {
+     // フォームのデフォルトの動作をキャンセルする
+     event.preventDefault();
+
+     // その後、必要な処理を行う
+     console.log("Form submission stopped");
+ });
+
+
+
  function setListValues() {
+        var managerList = document.getElementById("managerList");
+        var memberList = document.getElementById("memberList");
+        for(var i = 0 ; i < managerList.length; i++)
+        {
+            //console.dir(managerList[i]);
+            alert(managerList[i]);
+        }
+
+/*
         // managerの要素を取得
         var managerListElement = document.getElementById("managerList");
         var managerInputElement = document.getElementById("managerInput");
@@ -14,14 +34,21 @@
         var selectedValuesMem = Array.from(memberListElement.options)
                             .map(option => parseInt(option.value));
 
+        //数字の配列に変換
+        const manager = selectedValuesMgr.map(Number);
+        const member  = selectedValuesMem.map(Number);
+
+        console.log(manager);
+        console.log(member);
+
         //上記のint配列をinputタグに値を埋め込む
         var managerInput = document.getElementById(managerInput);
         var memberInput = document.getElementById(memberInput);
 
-       managerInput.value = selectedValuesMgr;
-       memberInput.value  = selectedValuesMem;
+        managerInput.value = selectedValuesMgr;
+        memberInput.value  = selectedValuesMem;
         //console.log( "selectedValuesMgr:" + selectedValuesMgr );
-
+    */
 }
 
 
@@ -33,7 +60,9 @@
         // userListの選択状態の数を取得
         for (var i = 0; i < userSelect.selectedOptions.length; i++) {
             var userOption = userSelect.selectedOptions[i];
-            //console.log("userOption:"+userOption.value);　//employeeCode
+            //console.log("userOption..selectedOptions.length : "+ userOption.selectedOptions.length );
+            //console.log("userOption.length.length : "+ userOption.value);
+            //console.dir("userOption:"+userOption);　
 
             // 追加時Manager,Memberに重複がないか調べる
             if (!isOptionInManagerList(userOption, managerList) && !isOptionInList(userOption, memberList)) {
@@ -44,9 +73,21 @@
 
                 // Add the new option to the managerList
                 managerList.add(managerAdd);
-            }
-        }
 
+
+            }
+
+        }
+        //debugPrint
+//        for( var i = 0; i<managerList.length; i++ )
+//        {
+//            var element = managerList[i].selectedOptions;
+//            //console.log( "managerList[i]"+ element.value );   //これではundefineだった
+//            console.log( "managerList[i] : "+ element);
+//            //console.log("managerList[" + i + "]: " + (element ? element.value : "undefined"));
+//
+//
+//        }
     }
 
     // Helper function to check if an option is already in the managerList
