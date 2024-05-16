@@ -772,7 +772,7 @@ public class ManagerController {
     public String displayTeamCreate(Model model, TeamCreateInput teamCreateInput){
         String title = "チーム作成";
         model.addAttribute("title", title);
-        model.addAttribute("teamCreateInput", teamCreateInput);
+        model.addAttribute("teamCreateInput", new TeamCreateInput());
 
         //メンバー追加処理
         List<User> allUser = userService.getAllEmployeeInfo();  //←user全員を持ってきている
@@ -791,11 +791,9 @@ public class ManagerController {
     @PostMapping("/team-create")
     public String createTeam(TeamCreateInput teamCreateInput, RedirectAttributes redirectAttributes){
 
-        //引数チェック
-        String[] employeeCodeIsManager = teamCreateInput.getEmployeeCodeIsManager();
-        String[] employeeCodeIsMember = teamCreateInput.getEmployeeCodeIsMember();
-        //
-//        foreach(int[] x : employeeCodeIsManager)
+        //チームに追加された人
+        List<Integer> employeeCodeIsManager = teamCreateInput.getEmployeeCodeIsManager();
+        List<Integer> employeeCodeIsMember = teamCreateInput.getEmployeeCodeIsMember();
 
         //TeamId作成
         int newTeamId = teamService.create(
@@ -805,6 +803,21 @@ public class ManagerController {
 
         Team team = teamService.getTeamById(newTeamId);
         String name = team.getName();
+
+        /////////////////////////////////////////////////////
+        //Managerループ
+        for (Integer employeeCode : employeeCodeIsManager) {
+            if( employeeCode != null){
+                int newAssignment = assignmentService.create(Integer.parseInt(employeeCode), true, newTeamId);
+            }
+        }
+        //Memberループ
+        for (String employeeCode : memberArray) {
+            if(!employeeCode.isEmpty()) {
+                int newAssignment = assignmentService.create(Integer.parseInt(employeeCode), false, newTeamId);
+            }
+        }
+        /////////////////////////////////////////////////
 
         redirectAttributes.addFlashAttribute("createCompleteMSG", name + "を作成しました。");
 

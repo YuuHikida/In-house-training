@@ -1,71 +1,39 @@
- //dbgprint
- document.getElementById("myForm").addEventListener("submit", function(event) {
-     // フォームのデフォルトの動作をキャンセルする
-     event.preventDefault();
+function setListValues()
+{
+   //inputタグ、Listタグの取得
+   var managerInput = document.getElementById("managerInput");
+   var memberInput  = document.getElementById("memberInput");
 
-     // その後、必要な処理を行う
-     console.log("Form submission stopped");
- });
-
-
-
- function setListValues() {
-        var managerList = document.getElementById("managerList");
-        var memberList = document.getElementById("memberList");
-        for(var i = 0 ; i < managerList.length; i++)
-        {
-            //console.dir(managerList[i]);
-            alert(managerList[i]);
-        }
-
-/*
-        // managerの要素を取得
-        var managerListElement = document.getElementById("managerList");
-        var managerInputElement = document.getElementById("managerInput");
-
-        // memberの要素を取得
-        var memberListElement = document.getElementById("memberList");
-        var memberInputElement = document.getElementById("memberInput");
-
-        // 全てのオプションの値をmanagerInputElementのvalueに設定
-        var selectedValuesMgr = Array.from(managerListElement.options)
-                            .map(option => parseInt(option.value));
-        // 全てのオプションの値をmemberInputElementのvalueに設定
-        var selectedValuesMem = Array.from(memberListElement.options)
-                            .map(option => parseInt(option.value));
-
-        //数字の配列に変換
-        const manager = selectedValuesMgr.map(Number);
-        const member  = selectedValuesMem.map(Number);
-
-        console.log(manager);
-        console.log(member);
-
-        //上記のint配列をinputタグに値を埋め込む
-        var managerInput = document.getElementById(managerInput);
-        var memberInput = document.getElementById(memberInput);
-
-        managerInput.value = selectedValuesMgr;
-        memberInput.value  = selectedValuesMem;
-        //console.log( "selectedValuesMgr:" + selectedValuesMgr );
-    */
+   var managerList = document.getElementById("managerList");
+   var memberList = document.getElementById("memberList");
+   //Inputタグに入れる配列を作成
+   const managerArray = [];
+   //リストの値を全て読み込む
+   //managerList
+   for(let i = 0; i <managerList.options.length;i++)
+   {
+        var element =managerList.options[i];
+        managerArray.push(element.value);
+        //managerInput[i].value = element.value;
+        console.log("managerArray[i]:"+ managerArray[i] );
+   }
+   //inputタグに配列を代入
+   managerList.value = managerArray;
+   //inputタグに入れる
 }
-
 
     function addManager() {
         var userSelect = document.getElementById("userList");
         var managerList = document.getElementById("managerList");
         var memberList = document.getElementById("memberList");
 
-        // userListの選択状態の数を取得
+        // Loop through all selected options
         for (var i = 0; i < userSelect.selectedOptions.length; i++) {
             var userOption = userSelect.selectedOptions[i];
-            //console.log("userOption..selectedOptions.length : "+ userOption.selectedOptions.length );
-            //console.log("userOption.length.length : "+ userOption.value);
-            //console.dir("userOption:"+userOption);　
+            console.log("userOption:"+userOption.value);
 
-            // 追加時Manager,Memberに重複がないか調べる
-            if (!isOptionInManagerList(userOption, managerList) && !isOptionInList(userOption, memberList)) {
+            // Check if the option is not already in managerList and not in memberList
+            if (isOptionInManagerList(userOption, managerList) && isOptionInList(userOption, memberList)) {
                 // Create a new option element for the managerList
                 var managerAdd = document.createElement("option");
                 managerAdd.text = userOption.text;
@@ -73,44 +41,21 @@
 
                 // Add the new option to the managerList
                 managerList.add(managerAdd);
-
-
-            }
-
-        }
-        //debugPrint
-//        for( var i = 0; i<managerList.length; i++ )
-//        {
-//            var element = managerList[i].selectedOptions;
-//            //console.log( "managerList[i]"+ element.value );   //これではundefineだった
-//            console.log( "managerList[i] : "+ element);
-//            //console.log("managerList[" + i + "]: " + (element ? element.value : "undefined"));
-//
-//
-//        }
-    }
-
-    // Helper function to check if an option is already in the managerList
-    function isOptionInManagerList(option, managerList) {
-        for (var i = 0; i < managerList.options.length; i++) {
-            if (managerList.options[i].value === option.value) {
-                return true;
             }
         }
-        return false;
     }
 
     function addMember() {
         var userSelect = document.getElementById("usersList");
         var memberList = document.getElementById("memberList");
         var managerList = document.getElementById("managerList"); // Add this line
-
+console.log("managerList.length:"+managerList.options.length);
         // Loop through all selected options
         for (var i = 0; i < userSelect.selectedOptions.length; i++) {
             var userOption = userSelect.selectedOptions[i];
 
             // Check if the option is not already in memberList and not in managerList
-            if (!isOptionInList(userOption, memberList) && !isOptionInManagerList(userOption, managerList)) {
+            if (isOptionInList(userOption, memberList) && isOptionInManagerList(userOption, managerList)) {
                 // Create a new option element for the memberList
                 var memberAdd = document.createElement("option");
                 memberAdd.text = userOption.text;
@@ -122,14 +67,24 @@
         }
     }
 
-    // Helper function to check if an option is already in the list
-    function isOptionInList(option, list) {
-        for (var i = 0; i < list.options.length; i++) {
-            if (list.options[i].value === option.value) {
-                return true;
+    function isOptionInManagerList(option, managerList) {
+        //console.log("managerList.options.length":managerList.options.length);
+        for (var i = 0; i < managerList.options.length; i++) {
+            if (managerList.options[i].value === option.value) {
+                return false;
             }
         }
-        return false;
+        return true;
+    }
+
+    function isOptionInList(option, list) {
+    //console.log("memberlist.options.length":list.options.length);
+        for (var i = 0; i < list.options.length; i++) {
+            if (list.options[i].value === option.value) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function removeMember() {
