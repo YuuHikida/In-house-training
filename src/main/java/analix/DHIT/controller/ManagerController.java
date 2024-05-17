@@ -800,9 +800,8 @@ public class ManagerController {
         Team team = teamService.getTeamById(newTeamId);
         String name = team.getName();
 
-        /////////////////////(作成時のManager,Member追加処理)////////////////////////////////
+        //作成時のManager,Member追加処理
         assignmentService.createNewTeamThatAddingCreatePeople( teamCreateInput, newTeamId );
-        /////////////////////////////////////////////////////////////////////////////
 
         redirectAttributes.addFlashAttribute("createCompleteMSG", name + "を作成しました。");
 

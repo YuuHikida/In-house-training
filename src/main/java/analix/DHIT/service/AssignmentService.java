@@ -146,8 +146,9 @@ public class AssignmentService {
     public List<Assignment> selectEmployeeCodeByTeamId(int teamId){
         return this.assignmentRepository.selectEmployeeCodeByTeamId(teamId);
     }
+
     /*
-    概要...                 新規チーム作成時、追加でManager,Memberの作成
+    概要...                 新規チーム作成時、追加でManager,Memberの追加処理
     [in/out]...             [in] TeamCreateInput teamCreateInput
                                   ...Userから受け取る作成時のチームの情報
                             [in] int newTeamId
@@ -182,7 +183,6 @@ public class AssignmentService {
                 }
             }
         }
-        return ;
     }
 
 }
