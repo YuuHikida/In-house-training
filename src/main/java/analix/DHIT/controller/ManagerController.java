@@ -789,9 +789,7 @@ public class ManagerController {
 
     @Transactional
     @PostMapping("/team-create")
-    public String createTeam(
-            TeamCreateInput teamCreateInput,
-            RedirectAttributes redirectAttributes){
+    public String createTeam(TeamCreateInput teamCreateInput, RedirectAttributes redirectAttributes){
 
         //TeamId作成
         int newTeamId = teamService.create(
@@ -803,27 +801,8 @@ public class ManagerController {
         String name = team.getName();
 
         /////////////////////(作成時のManager,Member追加処理)////////////////////////////////
-//        int[] managerArray = teamCreateInput.getEmployeeCodeIsManager().stream().mapToInt(Integer::intValue).toArray();
-        List<Integer> managerArray = teamCreateInput.getEmployeeCodeIsManager();
-        //Managerループ
-        for ( Integer employeeCode : managerArray )
-        {
-            if( employeeCode != null )
-            {
-                int newAssignment = assignmentService.create(employeeCode, true, newTeamId);
-            }
-        }
-        List<Integer> memberArray = teamCreateInput.getEmployeeCodeIsMember();
-        //Memberループ
-        for ( Integer employeeCode : memberArray )
-        {
-            if( employeeCode != null )
-            {
-                int newAssignment = assignmentService.create(employeeCode, false, newTeamId);
-            }
-        }
-
-        /////////////////////////////////////////////////
+        assignmentService.createNewTeamThatAddingCreatePeople( teamCreateInput, newTeamId );
+        /////////////////////////////////////////////////////////////////////////////
 
         redirectAttributes.addFlashAttribute("createCompleteMSG", name + "を作成しました。");
 

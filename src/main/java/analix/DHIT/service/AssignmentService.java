@@ -1,5 +1,6 @@
 package analix.DHIT.service;
 
+import analix.DHIT.input.TeamCreateInput;
 import analix.DHIT.mapper.TeamMapper;
 import analix.DHIT.model.Assignment;
 import analix.DHIT.model.Report;
@@ -145,4 +146,44 @@ public class AssignmentService {
     public List<Assignment> selectEmployeeCodeByTeamId(int teamId){
         return this.assignmentRepository.selectEmployeeCodeByTeamId(teamId);
     }
+    /*
+    概要...                 新規チーム作成時、追加でManager,Memberの作成
+    [in/out]...             [in] TeamCreateInput teamCreateInput
+                                  ...Userから受け取る作成時のチームの情報
+                            [in] int newTeamId
+                                  ... チーム作成時に割り振られるid
+                            [out] ...無し
+     */
+    public void createNewTeamThatAddingCreatePeople(TeamCreateInput teamCreateInput,  int newTeamId)
+    {
+        //Manager
+        List<Integer> managerArray = teamCreateInput.getEmployeeCodeIsManager();
+
+        if( managerArray != null )
+        {
+            for ( Integer employeeCode : managerArray )
+            {
+                if( employeeCode != null )
+                {
+                    int newAssignment = create(employeeCode, true, newTeamId);
+                }
+            }
+        }
+
+        //Member
+        List<Integer> memberArray = teamCreateInput.getEmployeeCodeIsMember();
+        if( memberArray != null )
+        {
+            for ( Integer employeeCode : memberArray )
+            {
+                if( employeeCode != null )
+                {
+                    int newAssignment = create(employeeCode, false, newTeamId);
+                }
+            }
+        }
+        return ;
+    }
+
 }
+
