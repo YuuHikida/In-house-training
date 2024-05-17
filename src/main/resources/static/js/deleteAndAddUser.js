@@ -1,64 +1,18 @@
 function setListValues()
 {
    //inputタグ、Listタグの取得
-   var managerInput = document.getElementById("managerInput");
-   var memberInput  = document.getElementById("memberInput");
-
    var managerList = document.getElementById("managerList");
    var memberList = document.getElementById("memberList");
-
+   //managerListの選択肢を全て選択状態にする
     for (var i = 0; i < managerList.options.length; i++)
     {
         managerList.options[i].selected = true;
     }
-
+    //memberListの選択肢を全て選択状態にする
     for (var i = 0; i < memberList.options.length; i++)
     {
         memberList.options[i].selected = true;
     }
-
-
-/*
-   //Inputタグに入れる配列を作成
-   const managerArray = [];
-   const memberArray = [];
-   //リストの値を全て読み込む
-   //managerList
-   for(let i = 0; i <managerList.options.length;i++)
-   {
-        var element =managerList.options[i];
-        managerArray.push(element.value);
-        //managerInput[i].value = element.value;
-        //console.log("managerArray[i]:"+ managerArray[i] );
-   }
-   //managerList
-     for(let i = 0; i <memberList.options.length;i++)
-     {
-          var element =memberList.options[i];
-          memberArray.push(element.value);
-          //managerInput[i].value = element.value;
-          //console.log("memberArray[i]:"+ memberArray[i] );
-     }
-     // inputタグに配列を代入（JSON文字列に変換して代入）
-     managerInput.value = JSON.stringify(managerArray);
-     memberInput.value = JSON.stringify(memberArray);
-
-            // 確認（配列の中身を表示）
-     managerArray.forEach(element => console.log("managerArray : " + element));
-     memberArray.forEach(element => console.log("memberArray : " + element));
-
-   //inputタグに配列を代入
-   managerList.value = managerArray;
-   memberList.value  = memberArray;
-    //確認
-    managerList.forEach( element =>console.log("managerList : " + element.value));
-    memberList.forEach( element =>console.log("memberList : " + element.value));
-    *////////////////////////
-   console.log();
-   setTimeout(function() {
-     console.log("これは3秒後に表示されます");
-   }, 10000);
-
 }
 
     function addManager() {

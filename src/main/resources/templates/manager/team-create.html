@@ -29,9 +29,7 @@
     <label >メンバーの追加</label><br>
         <label>Manager</label>
         <div class="form-group mb-3 d-flex">
-            <select id="managerList" class="form-select"  name="employeeCodeIsManager" multiple >
-                <option th:each="manager : ${managers}" th:text="${manager.name}" ></option>
-            </select>
+            <select id="managerList" class="form-select"  name="employeeCodeIsManager" multiple ></select>
             <div>
                 <button type="button" onclick="addManager()" class="btn btn-success">←追加</button>
                 <button type="button" onclick="removeManager()" class="btn btn-success">→削除</button>
@@ -43,9 +41,7 @@
 
         <label>Member</label>
         <div class="form-group mb-3 d-flex">
-            <select id="memberList" class="form-select" name= "employeeCodeIsMember" multiple>
-                <option th:each="member : ${members}" th:text="${member.name}"
-                        ></option>
+            <select id="memberList" class="form-select" name= "employeeCodeIsMember" multiple></option>
             </select>
             <div>
                 <button type="button" onclick="addMember()" class="btn btn-success">←追加</button>

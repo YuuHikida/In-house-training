@@ -791,13 +791,7 @@ public class ManagerController {
     @PostMapping("/team-create")
     public String createTeam(
             TeamCreateInput teamCreateInput,
-            RedirectAttributes redirectAttributes,
-            @RequestParam("employeeCodeIsManager") Integer[] managerCodes,
-            @RequestParam("employeeCodeIsMember") Integer[] memberCodes){
-
-        //チームに追加された人
-//        List<Integer> employeeCodeIsManager = teamCreateInput.getEmployeeCodeIsManager();
-//        List<Integer> employeeCodeIsMember = teamCreateInput.getEmployeeCodeIsMember();
+            RedirectAttributes redirectAttributes){
 
         //TeamId作成
         int newTeamId = teamService.create(
@@ -808,19 +802,27 @@ public class ManagerController {
         Team team = teamService.getTeamById(newTeamId);
         String name = team.getName();
 
-        /////////////////////////////////////////////////////
+        /////////////////////(作成時のManager,Member追加処理)////////////////////////////////
+//        int[] managerArray = teamCreateInput.getEmployeeCodeIsManager().stream().mapToInt(Integer::intValue).toArray();
+        List<Integer> managerArray = teamCreateInput.getEmployeeCodeIsManager();
         //Managerループ
-//        for (Integer employeeCode : employeeCodeIsManager) {
-//            if( employeeCode != null){
-//                int newAssignmentA = assignmentService.create(employeeCode.intValue(), true, newTeamId);
-//            }
-//        }
-//        //Memberループ
-//        for (Integer employeeCode : employeeCodeIsMember) {
-//            if(employeeCode != null) {
-//                int newAssignmentB = assignmentService.create(employeeCode.intValue(), false, newTeamId);
-//            }
-//        }
+        for ( Integer employeeCode : managerArray )
+        {
+            if( employeeCode != null )
+            {
+                int newAssignment = assignmentService.create(employeeCode, true, newTeamId);
+            }
+        }
+        List<Integer> memberArray = teamCreateInput.getEmployeeCodeIsMember();
+        //Memberループ
+        for ( Integer employeeCode : memberArray )
+        {
+            if( employeeCode != null )
+            {
+                int newAssignment = assignmentService.create(employeeCode, false, newTeamId);
+            }
+        }
+
         /////////////////////////////////////////////////
 
         redirectAttributes.addFlashAttribute("createCompleteMSG", name + "を作成しました。");
