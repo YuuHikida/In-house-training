@@ -11,6 +11,8 @@ import analix.DHIT.repository.UserRepository;
 //import com.opencsv.bean.CsvToBean;
 //import com.opencsv.bean.CsvToBeanBuilder;
 //import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -182,4 +184,13 @@ public class UserService {
     public void updateEmployee(UserCreateInput userCreateInput){
         this.userRepository.updateEmployee(userCreateInput);
     }
+
+    //ログイン中の認証情報からログインIDに使用しているemployeeCodeを取得
+    public int getAuthenticationEmployeeCode()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int employeeCode = Integer.parseInt(authentication.getName());
+        return  employeeCode;
+    }
+
 }
