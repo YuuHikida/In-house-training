@@ -85,6 +85,7 @@
         // Loop through all selected options
         for (var i = 0; i < userSelect.selectedOptions.length; i++) {
             var userOption = userSelect.selectedOptions[i];
+            console.log("userOption:"+userOption.value);
 
             // Check if the option is not already in managerList and not in memberList
             if (!isOptionInManagerList(userOption, managerList) && !isOptionInList(userOption, memberList)) {

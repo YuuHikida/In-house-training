@@ -7,6 +7,12 @@ import java.util.List;
 
 public class TeamCreateInput {
 
+    private String name;
+    private boolean release;
+    //チームに人を入れるために追加
+    private List<Integer> employeeCodeIsManager;
+    private  List<Integer> employeeCodeIsMember;
+
     public String getName() {
         return name;
     }
@@ -21,7 +27,19 @@ public class TeamCreateInput {
         this.release=release;
     }
 
-    private String name;
-    private boolean release;
+    public List<Integer> getEmployeeCodeIsManager() {
+        return employeeCodeIsManager;
+    }
 
+    public List<Integer> getEmployeeCodeIsMember() {
+        return employeeCodeIsMember;
+    }
+
+    public void setEmployeeCodeIsManager(List<Integer> employeeCodeIsManager) {
+        this.employeeCodeIsManager = employeeCodeIsManager;
+    }
+
+    public void setEmployeeCodeIsMember(List<Integer> employeeCodeIsMember) {
+        this.employeeCodeIsMember = employeeCodeIsMember;
+    }
 }

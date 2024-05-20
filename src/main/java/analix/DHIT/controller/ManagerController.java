@@ -767,11 +767,23 @@ public class ManagerController {
         return "manager/teamlist";
     }
 
+    //チーム作成メソッド
     @GetMapping("/team-create")
-    public String displayTeamCreate(Model model){
+    public String displayTeamCreate(Model model, TeamCreateInput teamCreateInput){
         String title = "チーム作成";
         model.addAttribute("title", title);
         model.addAttribute("teamCreateInput", new TeamCreateInput());
+
+        //メンバー追加処理
+        List<User> allUser = userService.getAllEmployeeInfo();  //←user全員を持ってきている
+        List<User>users=new ArrayList<>();
+        for(User user : allUser){
+            if(!user.getName().equals("SuperAdmin")){
+                users.add(userService.getUserByEmployeeCode(user.getEmployeeCode()));
+            }
+        }
+        model.addAttribute("users", users);
+
         return "manager/team-create";
     }
 
@@ -779,6 +791,7 @@ public class ManagerController {
     @PostMapping("/team-create")
     public String createTeam(TeamCreateInput teamCreateInput, RedirectAttributes redirectAttributes){
 
+        //TeamId作成
         int newTeamId = teamService.create(
                 teamCreateInput.getName(),
                 teamCreateInput.getRelase()
@@ -786,6 +799,9 @@ public class ManagerController {
 
         Team team = teamService.getTeamById(newTeamId);
         String name = team.getName();
+
+        //作成時のManager,Member追加処理
+        assignmentService.createNewTeamThatAddingCreatePeople( teamCreateInput, newTeamId );
 
         redirectAttributes.addFlashAttribute("createCompleteMSG", name + "を作成しました。");
 
@@ -847,7 +863,7 @@ public class ManagerController {
 
         return "manager/team-detail";
     }
-
+//メンバー追加、削除画面
     @GetMapping("/assignment/{teamId}")
     public String createAssignment(Model model, @PathVariable int teamId){
 
