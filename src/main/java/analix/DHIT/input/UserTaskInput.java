@@ -2,12 +2,11 @@ package analix.DHIT.input;
 
 import lombok.Data;
 
-
+@Data
 public class UserTaskInput {
     private String task_name;
     private String comment;
     private int progressRate;
-
 
     public int getProgressRate() {
         return progressRate;
