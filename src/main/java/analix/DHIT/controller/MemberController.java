@@ -1,17 +1,11 @@
 package analix.DHIT.controller;
 
 
-import analix.DHIT.config.LoginUserDetailsService;
 import analix.DHIT.input.*;
 import analix.DHIT.model.*;
 import analix.DHIT.service.*;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.RegisteredBean;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -29,8 +23,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 
-import javax.mail.MessagingException;
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -56,7 +48,7 @@ public class MemberController {
     private final TaskService taskService;
 
 
-//    @Autowired
+    //    @Autowired
     public MemberController(UserService userService,
                             ReportService reportService,
                             FeedbackService feedbackService,
@@ -93,7 +85,7 @@ public class MemberController {
         SettingInput settingInput = new SettingInput();
         //java.timeパッケージから現在の時刻を取得
         reportCreateInput.setDate(LocalDate.now());
-        if (targetDate != null){
+        if (targetDate != null) {
             reportCreateInput.setDate(targetDate);
         }
         String title = "報告作成";
@@ -182,7 +174,7 @@ public class MemberController {
         // タスクが存在するならタスクログに追加
         if (reportCreateInput.getTaskLogs() != null) {
             List<Task> taskLogs = reportCreateInput.getTaskLogs();
-            taskService.createTasks(taskLogs,employeeCode,newReportId);
+            taskService.createTasks(taskLogs, employeeCode, newReportId);
         }
 
         return "redirect:/member/report/create-completed";
@@ -500,7 +492,7 @@ public class MemberController {
         // タスクが存在するならタスクログに追加
         if (reportUpdateInput.getTaskLogs() != null) {
             List<Task> taskLogs = reportUpdateInput.getTaskLogs();
-            taskService.updateTask(taskLogs,employeeCode,reportUpdateInput.getReportId());
+            taskService.updateTask(taskLogs, employeeCode, reportUpdateInput.getReportId());
         }
 
         redirectAttributes.addAttribute("reportId", reportUpdateInput.getReportId());
@@ -510,14 +502,8 @@ public class MemberController {
     }
 
 
-
-
-
-
-
-
     @GetMapping("/taskMenu")
-    public String taskMenu(@RequestParam(value = "myTask", required = false) String myTask,Model model) {
+    public String taskMenu(@RequestParam(value = "myTask", required = false) String myTask, Model model) {
 
         //ログインユーザーのemployeeCodeを取得する
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -528,7 +514,7 @@ public class MemberController {
         isManager = assignmentService.getCountIsManagerByEmployeeCode(employeeCode);
 
         //管理しているチームがある場合『/member/taskMenu』に遷移================
-        if (isManager && myTask == null){
+        if (isManager && myTask == null) {
             return "member/task-menu";
         }
         //===============================================================
@@ -537,69 +523,69 @@ public class MemberController {
         //管理しているチームがある時「自分のタスク」を押下した時も実行される
         //自分のタスクを取得する
         List<Task> tasks = this.taskService.selectByEmployeeCode(employeeCode);
-        model.addAttribute("taskList",tasks);
+        model.addAttribute("taskList", tasks);
         //自分のフルネームを取得する
         User user = this.userService.selectUserById(employeeCode);
         String userName = user.getName();
-        model.addAttribute("userName",userName);
+        model.addAttribute("userName", userName);
         //検索条件格納用オブジェクト
-        model.addAttribute("TaskSearchInput",new TaskSearchInput());
+        model.addAttribute("TaskSearchInput", new TaskSearchInput());
         return "member/task-myTaskList";
         //********************************************************************
     }
 
     @PostMapping("/task-search-list")
-    public String searchTaskList(TaskSearchInput taskSearchInput,Model model){
+    public String searchTaskList(TaskSearchInput taskSearchInput, Model model) {
         //ログインユーザーのemployeeCodeを取得する
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int employeeCode = Integer.parseInt(authentication.getName());
         taskSearchInput.setEmployeeCode(employeeCode);
 
         //state(空欄、達成、未達成)で「達成」の時「progressRateAbove」を100にする
-        if (taskSearchInput.getState().equals("達成")){
+        if (taskSearchInput.getState().equals("達成")) {
             taskSearchInput.setProgressRateAbove(100);
-        }else if (taskSearchInput.getState().equals("未達成")){
+        } else if (taskSearchInput.getState().equals("未達成")) {
             taskSearchInput.setProgressRateAbove(99);
         }
 
         //検索条件に基づいてレコードを取得する
         List<Task> tasks = taskService.selectSearch(taskSearchInput);
-        model.addAttribute("taskList",tasks);
+        model.addAttribute("taskList", tasks);
 
         //自分のフルネームを取得する
         User user = this.userService.selectUserById(employeeCode);
         String userName = user.getName();
-        model.addAttribute("userName",userName);
+        model.addAttribute("userName", userName);
         //検索条件格納用オブジェクト
-        model.addAttribute("TaskSearchInput",new TaskSearchInput());
+        model.addAttribute("TaskSearchInput", new TaskSearchInput());
 
-        return"member/task-myTaskList";
+        return "member/task-myTaskList";
     }
 
     @PostMapping("/teamTask")
     public String teamTask(Model model,
-                               @RequestParam(value = "teamTask", required = false) String teamTask){
+                           @RequestParam(value = "teamTask", required = false) String teamTask) {
 
         //ログインユーザーのemployeeCodeを取得する
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int employeeCode = Integer.parseInt(authentication.getName());
 
         //管理しているチームIDを取得するselectTeamByEmployeeCode
-        List<Team>teams = teamService.selectTeamByEmployeeCode(employeeCode);
-        model.addAttribute("teams",teams);
+        List<Team> teams = teamService.selectTeamByEmployeeCode(employeeCode);
+        model.addAttribute("teams", teams);
 
         return "member/task-teamList";
     }
 
     @PostMapping("/taskTeamList")
     public String taskTeamList(@ModelAttribute Team teamList,
-                                Model model){
+                               Model model) {
         //teamListのteamIdからチームメンバーを取得する
-        List<Assignment>teamMembers = assignmentService.selectEmployeeCodeByTeamId(teamList.getTeamId());
+        List<Assignment> teamMembers = assignmentService.selectEmployeeCodeByTeamId(teamList.getTeamId());
 
         //取得したチームメンバーから各自が保有しているタスクを取得する
-        List<Task>teamMemberTask = new ArrayList<>();
-        for(Assignment teamMember : teamMembers){
+        List<Task> teamMemberTask = new ArrayList<>();
+        for (Assignment teamMember : teamMembers) {
             List<Task> tasks = taskService.selectTaskAndUserNameByEmployeeCode(teamMember.getEmployeeCode(), teamList.getTeamId());
             teamMemberTask.addAll(tasks);
         }
@@ -614,45 +600,45 @@ public class MemberController {
     @PostMapping("/task-search-taskTeamList")
     public String searchTaskTeamList(TaskSearchInput taskSearchInput,
                                      @ModelAttribute Team teamList,
-                                     Model model){
+                                     Model model) {
         //チームメンバーのemployeeCodeを取得する
-        List<Assignment>teamMembers = assignmentService.selectEmployeeCodeByTeamId(taskSearchInput.getTeamId());
+        List<Assignment> teamMembers = assignmentService.selectEmployeeCodeByTeamId(taskSearchInput.getTeamId());
 
         //state(空欄、達成、未達成)で「達成」の時「progressRateAbove」を100にする
-        if (taskSearchInput.getState().equals("達成")){
+        if (taskSearchInput.getState().equals("達成")) {
             taskSearchInput.setProgressRateAbove(100);
-        }else if (taskSearchInput.getState().equals("未達成")){
+        } else if (taskSearchInput.getState().equals("未達成")) {
             taskSearchInput.setProgressRateAbove(99);
         }
 
         //検索条件に基づいてレコードを取得する
-        List<Task>teamMemberTask = new ArrayList<>();
-        for(Assignment member : teamMembers){
+        List<Task> teamMemberTask = new ArrayList<>();
+        for (Assignment member : teamMembers) {
             taskSearchInput.setEmployeeCode(member.getEmployeeCode());
             List<Task> tasks = taskService.selectSearchTaskAndUserNameByEmployeeCode(taskSearchInput);
             teamMemberTask.addAll(tasks);
         }
 
-        model.addAttribute("taskList",teamMemberTask);
+        model.addAttribute("taskList", teamMemberTask);
 
         //検索条件格納用オブジェクト
-        model.addAttribute("TaskSearchInput",new TaskSearchInput());
+        model.addAttribute("TaskSearchInput", new TaskSearchInput());
 
         model.addAttribute("teamId", teamList.getTeamId());
 
-        return"member/task-teamTaskList";
+        return "member/task-teamTaskList";
     }
 
     @GetMapping("/taskDetail/{taskId}")
-    public String taskDetail(@PathVariable int taskId, Model model){
+    public String taskDetail(@PathVariable int taskId, Model model) {
 
         //タスクIDをもとにタスクの詳細を取得する
         Task taskDetail = taskService.selectByTaskIdDetail(taskId);
-        model.addAttribute("taskDetail",taskDetail);
+        model.addAttribute("taskDetail", taskDetail);
 
         //タスクの履歴
         List<Task> taskHistory = taskService.selectByTaskIdHistory(taskId);
-        model.addAttribute("taskHistory",taskHistory);
+        model.addAttribute("taskHistory", taskHistory);
 
         //自分のタスクの時、編集・削除をしたいので、ボタンの表示非表示のためのフラグを作成
         //自分のemployeeCode
@@ -662,15 +648,15 @@ public class MemberController {
         int targetEmployeeCode = taskDetail.getEmployeeCode();
         //フラグ：自分のタスクの場合[true]として、viewで編集・削除ボタンを表示させる
         boolean isOwner = myEmployeeCode == targetEmployeeCode;
-        model.addAttribute("isOwner",isOwner);
+        model.addAttribute("isOwner", isOwner);
 
-        model.addAttribute("taskId",taskDetail.getTaskId());
+        model.addAttribute("taskId", taskDetail.getTaskId());
 
-        return"member/task-Detail";
+        return "member/task-Detail";
     }
 
     @GetMapping("/taskEdit/{taskId}")
-    public String taskEdit(@PathVariable int taskId, Model model){
+    public String taskEdit(@PathVariable int taskId, Model model) {
         Task task = taskService.selectByTaskIdDetail(taskId);
         model.addAttribute("task", task);
         model.addAttribute("Task", new Task());
@@ -679,7 +665,7 @@ public class MemberController {
 
     @Transactional
     @PostMapping("/task-update")
-    public String taskUpdate(Task task, Model model){
+    public String taskUpdate(Task task, Model model) {
         //user_task：update
         task.setUpdateAt(LocalDate.now());
         taskService.updateOneTask(task);
@@ -692,18 +678,18 @@ public class MemberController {
         int employeeCode = Integer.parseInt(authentication.getName());
         //自分のタスクを取得する
         List<Task> tasks = this.taskService.selectByEmployeeCode(employeeCode);
-        model.addAttribute("taskList",tasks);
+        model.addAttribute("taskList", tasks);
         //自分のフルネームを取得する
         User user = this.userService.selectUserById(employeeCode);
         String userName = user.getName();
-        model.addAttribute("userName",userName);
+        model.addAttribute("userName", userName);
         //検索条件格納用オブジェクト
-        model.addAttribute("TaskSearchInput",new TaskSearchInput());
-        return"member/task-myTaskList";
+        model.addAttribute("TaskSearchInput", new TaskSearchInput());
+        return "member/task-myTaskList";
     }
 
     @GetMapping("/taskDelete/{taskId}")
-    public String taskDelete(@PathVariable int taskId, Model model){
+    public String taskDelete(@PathVariable int taskId, Model model) {
         taskService.deleteTaskByTaskId(taskId);
 
         //ログインユーザーのemployeeCodeを取得する
@@ -711,52 +697,51 @@ public class MemberController {
         int employeeCode = Integer.parseInt(authentication.getName());
         //自分のタスクを取得する
         List<Task> tasks = this.taskService.selectByEmployeeCode(employeeCode);
-        model.addAttribute("taskList",tasks);
+        model.addAttribute("taskList", tasks);
         //自分のフルネームを取得する
         User user = this.userService.selectUserById(employeeCode);
         String userName = user.getName();
-        model.addAttribute("userName",userName);
+        model.addAttribute("userName", userName);
         //検索条件格納用オブジェクト
-        model.addAttribute("TaskSearchInput",new TaskSearchInput());
+        model.addAttribute("TaskSearchInput", new TaskSearchInput());
         return "member/task-myTaskList";
     }
 
     @PostMapping("/handover_Team")
-    public String handover_Team(Model model){
+    public String handover_Team(Model model) {
 
         //ログインユーザーのemployeeCodeを取得する
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int employeeCode = Integer.parseInt(authentication.getName());
 
         //管理しているチームIDを取得するselectTeamByEmployeeCode
-        List<Team>teams = teamService.selectTeamByEmployeeCode(employeeCode);
-        model.addAttribute("teams",teams);
+        List<Team> teams = teamService.selectTeamByEmployeeCode(employeeCode);
+        model.addAttribute("teams", teams);
 
-        return"member/task-handover-teamList";
+        return "member/task-handover-teamList";
     }
 
     @PostMapping("/handover")
-    public String handover(@ModelAttribute Team teamId,Model model){
+    public String handover(@ModelAttribute Team teamId, Model model) {
 
         //チームメンバーの名前とemployeeCodeを取得する
-        List<TaskHandoverInput>teamTasks = this.handoverService.selectByTeamId(teamId.getTeamId());
+        List<TaskHandoverInput> teamTasks = this.handoverService.selectByTeamId(teamId.getTeamId());
 
         //個人のタスクを取得する
-        for(TaskHandoverInput task : teamTasks){
-            List<Task>taskList = this.handoverService.selectByEmployeeCode(task.getEmployeeCode());
+        for (TaskHandoverInput task : teamTasks) {
+            List<Task> taskList = this.handoverService.selectByEmployeeCode(task.getEmployeeCode());
             task.setTasks(taskList);
         }
 
 
+        model.addAttribute("taskList", teamTasks);
+        model.addAttribute("TaskHandoverSetInput", new TaskHandoverSetInput());
 
-        model.addAttribute("taskList",teamTasks);
-        model.addAttribute("TaskHandoverSetInput",new TaskHandoverSetInput());
-
-        return"member/task-handover-test";
+        return "member/task-handover-test";
     }
 
     @PostMapping("/handover-add")
-    public String handoverAdd(TaskHandoverSetInput taskHandoverSetInput, Model model){
+    public String handoverAdd(TaskHandoverSetInput taskHandoverSetInput, Model model) {
 
         //user_taskの引き継いだtaskIdのemployeeCodeを変更する：update
         //　⇒　・employee_code
@@ -778,18 +763,43 @@ public class MemberController {
         taskHandoverSetInput.setReportId(handoverService.selectReportIdUsingTaskId(taskHandoverSetInput.getTaskId()));
         taskHandoverSetInput.setCreateAt(LocalDate.now());
         handoverService.saveHandoverLog(taskHandoverSetInput);
-        model.addAttribute("taskHandoverSetInput",taskHandoverSetInput);
+        model.addAttribute("taskHandoverSetInput", taskHandoverSetInput);
         return "member/task-handover-completed";
     }
 
+    //[追加機能]タスクの追加画面遷移
+    @GetMapping("/handover_TaskAdd")
+    public String handover_TaskAdd(Model model) {
+        TaskInputForm taskInputForm = new TaskInputForm();
+        model.addAttribute("TaskInputForm", taskInputForm);
+        return "member/handover_TaskAdd";
+    }
+
+    //追加処理後、メニュー画面へ遷移
+    @PostMapping("/TaskAdd")
+    public String createTask(@ModelAttribute TaskInputForm taskInputForm,
+                             Model model) {
+
+        if (taskInputForm != null)
+        {
+            taskService.addTask(taskInputForm);
+            model.addAttribute("MSG", "タスクの追加を行いました");
+        }
+        else
+        {
+            model.addAttribute("MSG", "入力エラー発生");
+        }
+        return "member/task-complete";
+    }
+
     @GetMapping("/taskBulkDeletion")
-    public String taskBulkDeletion (Model model) {
+    public String taskBulkDeletion(Model model) {
         //ログインユーザーのemployeeCodeを取得する
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int employeeCode = Integer.parseInt(authentication.getName());
 
         //EmployeeCode1から全てのタスクを取得する
-        List<Task>taskList = taskService.selectByEmployeeCode(employeeCode);
+        List<Task> taskList = taskService.selectByEmployeeCode(employeeCode);
         model.addAttribute("taskList", taskList);
         model.addAttribute("TaskBulkDeletionInput", new TaskBulkDeletionInput());
         return "member/task-bulkDeletion";
@@ -797,18 +807,18 @@ public class MemberController {
 
     @Transactional
     @PostMapping("/taskBulkDeletionExecution")
-    public String taskBulkDeletionExecution (TaskBulkDeletionInput taskBulkDeletionInput, Model model) {
+    public String taskBulkDeletionExecution(TaskBulkDeletionInput taskBulkDeletionInput, Model model) {
         //「,」で区切って配列に変換
         String[] taskIdArray = taskBulkDeletionInput.getTaskList().split(",");
 
         //文字列型なので、数値型に変換
-        List<Integer>taskIdList = new ArrayList<>();
-        for (String taskId : taskIdArray){
+        List<Integer> taskIdList = new ArrayList<>();
+        for (String taskId : taskIdArray) {
             taskIdList.add(Integer.parseInt(taskId));
         }
 
         //タスクIDを基に削除
-        for(int i = 0; i < taskIdList.size(); i++){
+        for (int i = 0; i < taskIdList.size(); i++) {
             taskService.deleteTaskByTaskId(taskIdList.get(i));
         }
 
@@ -818,26 +828,15 @@ public class MemberController {
         int employeeCode = Integer.parseInt(authentication.getName());
         //自分のタスクを取得する
         List<Task> tasks = this.taskService.selectByEmployeeCode(employeeCode);
-        model.addAttribute("taskList",tasks);
+        model.addAttribute("taskList", tasks);
         //自分のフルネームを取得する
         User user = this.userService.selectUserById(employeeCode);
         String userName = user.getName();
-        model.addAttribute("userName",userName);
+        model.addAttribute("userName", userName);
         //検索条件格納用オブジェクト
-        model.addAttribute("TaskSearchInput",new TaskSearchInput());
-        return"member/task-myTaskList";
+        model.addAttribute("TaskSearchInput", new TaskSearchInput());
+        return "member/task-myTaskList";
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     @GetMapping("/user-main")
@@ -1116,7 +1115,7 @@ public class MemberController {
                 applyCreateInput.getCreatedDate()
         );
 
-       return "redirect:/member/apply/create-completed";
+        return "redirect:/member/apply/create-completed";
     }
 
     // 申請提出完了画面
@@ -1221,9 +1220,10 @@ public class MemberController {
     ) {
         Apply apply = applyService.findById(applyId);
         apply.setUser(userService.getUserByEmployeeCode(apply.getEmployeeCode()));
-        model.addAttribute("apply",apply);
+        model.addAttribute("apply", apply);
         return "/member/apply-detail";
     }
+
     @GetMapping("/apply/{applyId}/delete")
     @Transactional
     public String deleteApply(
@@ -1244,7 +1244,7 @@ public class MemberController {
         User member = userService.getUserByEmployeeCode(employeeCode);
         model.addAttribute("member", member);
         List<Apply> applys = applyService.getfindAll(employeeCode);
-        model.addAttribute("applys",applys);
+        model.addAttribute("applys", applys);
         model.addAttribute("applySearchInput", new ApplySearchInput());
         model.addAttribute("error", model.getAttribute("error"));
         model.addAttribute("applySortInput", new ApplySortInput());

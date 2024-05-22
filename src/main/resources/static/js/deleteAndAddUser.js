@@ -3,7 +3,7 @@ function setListValues()
    //inputタグ、Listタグの取得
    var managerList = document.getElementById("managerList");
    var memberList = document.getElementById("memberList");
-   //managerListの選択肢を全て選択状態にする
+   //manaYerListの選択肢を全て選択状態にする
     for (var i = 0; i < managerList.options.length; i++)
     {
         managerList.options[i].selected = true;

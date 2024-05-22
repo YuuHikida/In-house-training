@@ -18,7 +18,8 @@
                         <h3 style="color: red;" th:text="${error}"></h3>
                     </div>
                     <div class="d-flex">
-                        <div id="date_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2" style="width:200px;">
+                        <div id="date_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2"
+                             style="width:200px;">
                             <p class="text-center mt-3">日付</p>
                             <div class="cs-form">
                                 <input type="date" class="form-control" name="date" th:value="${reportCreateInput.date}"
@@ -28,17 +29,20 @@
                         </div>
 
 
-                        <div id="startTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2" style="width:200px;">
+                        <div id="startTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2"
+                             style="width:200px;">
                             <p class="text-center mt-3">出勤時間</p>
                             <div class="cs-form">
                                 <input type="time" class="form-control" name="startTime"
                                        th:value="${settingInput.startTime}" required/>
                             </div>
                         </div>
-                        <div id="endTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2" style="width:200px;">
+                        <div id="endTime_mb" class="col-md-12 d-flex flex-row align-items-center gap-3 me-2"
+                             style="width:200px;">
                             <p class="text-center mt-3">退勤時間</p>
                             <div class="cs-form">
-                                <input type="time" class="form-control" name="endTime" th:value="${settingInput.endTime}"
+                                <input type="time" class="form-control" name="endTime"
+                                       th:value="${settingInput.endTime}"
                                        required/>
                             </div>
                         </div>
@@ -125,7 +129,6 @@
                                 <button type="button" class="btn btn-danger" onclick="removeTask(this)">削除</button>
                             </div>
                         </div>
-                        <div></div>
                     </div>
                     <div class="col-12">
                         <button type="submit" class="w-100 btn btn-lg btn-success">提出</button>

@@ -769,7 +769,7 @@ public class ManagerController {
 
     //チーム作成メソッド
     @GetMapping("/team-create")
-    public String displayTeamCreate(Model model, TeamCreateInput teamCreateInput){
+    public String displayTeamCreate(Model model){
         String title = "チーム作成";
         model.addAttribute("title", title);
         model.addAttribute("teamCreateInput", new TeamCreateInput());

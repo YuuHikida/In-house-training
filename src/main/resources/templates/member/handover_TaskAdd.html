@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" th:remove="tag">
+    <script th:src="@{/js/taskAdd.js}"></script>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container p-3">
+        <div class="card">
+            <div class="card-body">
+                <form class="row g-3 p-3" th:action="@{/member/TaskAdd}" th:object="${taskInputForm}" method="post">
+
+                <div th:if="${error != null}" class="text-center mb-4">
+                        <h3 style="color: red;" th:text="${error}"></h3>
+                    </div>
+
+                    <span id="charCountLt" style="margin-left: 5px;"></span>
+                    <!--                    ここから-->
+                    <div class="col-12 d-flex flex-column gap-2" id="todo-field">
+                        <div class="d-flex gap-2">
+                            <p class="d-inline d-inline-block p-0 m-0">タスク欄の追加</p>
+                            <button type="button" class="btn btn-secondary" onclick="addTask()">追加</button>
+                        </div>
+                        <!-- タスクの入力フィールド -->
+                        <div>
+                            <div class="card-body flex-row gap-3 col-md-8">
+                                <label>タスク名</label>
+                                <input type="text" id="inputName" class="form-control"
+                                       placeholder="タスク名（最大100文字）"
+                                       aria-label="" maxlength="100"
+
+                                       required>
+                                <label>進捗率</label>
+                                <input type="number" id="inputProgress" class="form-control" placeholder="進捗率"
+                                       aria-label=""
+                                       min="0" max="100"
+
+                                       required>
+                                <label>コメント</label>
+                                <input type="text" id="inputComment" class="form-control"
+                                       placeholder="コメント（最大300文字）"
+                                       aria-label=""
+                                       maxlength="300"
+
+                                       required>
+                                <button type="button" class="btn btn-danger" onclick="removeTask(this)">削除</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="w-100 btn btn-lg btn-success">タスク追加</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
