@@ -784,7 +784,14 @@ public class MemberController {
         int employeeCode = Integer.parseInt(authentication.getName());
 
         //(多分)TaskIDを取得←AutoINCRMENTなので指定不要?
-        taskService.addTask(taskInputForm, employeeCode);
+        if(taskInputForm !=null )
+        {
+            taskService.addTask(taskInputForm, employeeCode);
+        }else
+        {
+            redirectAttributes.addAttribute("text","入力エラー発生");
+        }
+
         //上記二つをもとに新しいタスクを紐付け
 
 
