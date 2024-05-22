@@ -11,7 +11,7 @@
             const progress = document.getElementById("inputProgress");
             const comment = document.getElementById("inputComment");
 
-            name.name = `taskInputList[${arrayCount}].taskName`;
+            name.name = `taskInputList[${arrayCount}].task_name`;
             progress.name = `taskInputList[${arrayCount}].progressRate`;
             comment.name = `taskInputList[${arrayCount}].comment`;
 
@@ -42,8 +42,6 @@
 
 
         function removeTask(button) {
-            console.log("button.parentNode.name:"+button.parentNode.name);
-            console.log("button.parentNode.parentNode.name:"+button.parentNode.parentNode.name);
             button.parentNode.parentNode.remove();
         }
 

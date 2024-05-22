@@ -2,6 +2,7 @@ package analix.DHIT.service;
 
 import analix.DHIT.input.ReportCreateInput;
 import analix.DHIT.input.TaskDetailInput;
+import analix.DHIT.input.TaskInputForm;
 import analix.DHIT.input.TaskSearchInput;
 import analix.DHIT.model.Task;
 import analix.DHIT.repository.TaskRepository;
@@ -209,4 +210,8 @@ public class TaskService {
         }
     }
 
+    public void addTask(TaskInputForm taskInputForm,int employeeCode)
+    {
+
+    }
 }

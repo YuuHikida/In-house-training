@@ -771,23 +771,24 @@ public class MemberController {
     @GetMapping("/handover_TaskAdd")
     public String handover_TaskAdd(Model model) {
         TaskInputForm taskInputForm = new TaskInputForm();
-        model.addAttribute("TaskInputForm",taskInputForm);
+        model.addAttribute("TaskInputForm", taskInputForm);
         return "member/handover_TaskAdd";
     }
 
     //追加処理後、メニュー画面へ遷移
 
     @PostMapping("/TaskAdd")
-    public String createTask(RedirectAttributes redirectAttributes,@ModelAttribute TaskInputForm taskInputForm) {
+    public String createTask(RedirectAttributes redirectAttributes, @ModelAttribute TaskInputForm taskInputForm) {
         //employeeCodeを取得
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int employeeCode = Integer.parseInt(authentication.getName());
 
         //(多分)TaskIDを取得←AutoINCRMENTなので指定不要?
-
+        taskService.addTask(taskInputForm, employeeCode);
         //上記二つをもとに新しいタスクを紐付け
 
-        return "member/task-handover-teamList";
+
+        return "member/taskMenu";
     }
 
     @GetMapping("/taskBulkDeletion")
