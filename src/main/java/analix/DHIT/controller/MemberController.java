@@ -776,26 +776,20 @@ public class MemberController {
     }
 
     //追加処理後、メニュー画面へ遷移
-
     @PostMapping("/TaskAdd")
-    public String createTask(RedirectAttributes redirectAttributes, @ModelAttribute TaskInputForm taskInputForm) {
-        //employeeCodeを取得
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int employeeCode = Integer.parseInt(authentication.getName());
+    public String createTask(@ModelAttribute TaskInputForm taskInputForm,
+                             Model model) {
 
-        //(多分)TaskIDを取得←AutoINCRMENTなので指定不要?
-        if(taskInputForm !=null )
+        if (taskInputForm != null)
         {
-            taskService.addTask(taskInputForm, employeeCode);
-        }else
-        {
-            redirectAttributes.addAttribute("text","入力エラー発生");
+            taskService.addTask(taskInputForm);
+            model.addAttribute("MSG", "タスクの追加を行いました");
         }
-
-        //上記二つをもとに新しいタスクを紐付け
-
-
-        return "member/taskMenu";
+        else
+        {
+            model.addAttribute("MSG", "入力エラー発生");
+        }
+        return "member/task-complete";
     }
 
     @GetMapping("/taskBulkDeletion")
